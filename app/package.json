@@ -1,6 +1,6 @@
 {
   "name": "jie-desktop-pet-community",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "颉桌宠基础版与按需功能包",
   "main": "community-bootstrap.cjs",
   "private": true,

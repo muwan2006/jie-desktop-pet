@@ -15,6 +15,7 @@ function CheckParents([string]$file){$taskCursor=Split-Path -Parent $file;while(
 function RemoveCheckedTree([string]$target,[string]$parent){$taskAbsolute=[IO.Path]::GetFullPath($target);if((Split-Path -Parent $taskAbsolute) -ne $parent -or -not $taskAbsolute.StartsWith($parent+'\',[StringComparison]::OrdinalIgnoreCase)){throw 'Cleanup escaped allowed directory'};if(Test-Path -LiteralPath $taskAbsolute){$taskEntries=@(Get-Item -LiteralPath $taskAbsolute -Force)+@(Get-ChildItem -LiteralPath $taskAbsolute -Recurse -Force);if($taskEntries|Where-Object {$_.Attributes.HasFlag([IO.FileAttributes]::ReparsePoint)}){throw 'Cleanup contains links'};Remove-Item -LiteralPath $taskAbsolute -Recurse -Force}}
 $taskResult=Join-Path $taskData 'community-last-result.json';$taskSuccess=$false
 try{
+ if($taskConfig.readyPath){$taskReady=[IO.Path]::GetFullPath($taskConfig.readyPath);if((Split-Path -Parent $taskReady) -ne (Join-Path $taskData 'community-jobs')){throw 'Invalid ready path'};$taskReadyTemp=$taskReady+'.tmp';[IO.File]::WriteAllText($taskReadyTemp,(@{ok=$true;root=$taskRoot;job=[IO.Path]::GetFullPath($Job);pid=$PID}|ConvertTo-Json),[Text.UTF8Encoding]::new($false));Move-Item -LiteralPath $taskReadyTemp -Destination $taskReady -Force}
  for($taskWait=0;$taskWait -lt 120;$taskWait++){if(-not(Get-Process -Id $taskConfig.pid -ErrorAction SilentlyContinue)){break};Start-Sleep -Milliseconds 500}
  if(Get-Process -Id $taskConfig.pid -ErrorAction SilentlyContinue){throw 'Community app did not exit'}
  $taskOwned=@{};$taskComponents=@{};foreach($taskComponent in $taskConfig.installed.PSObject.Properties){$taskComponents[$taskComponent.Name]=$taskComponent.Value;foreach($taskFile in $taskComponent.Value.files.PSObject.Properties){$taskOwned[$taskFile.Name]=$taskFile.Value}}
@@ -26,11 +27,12 @@ try{
  $taskSuccess=$true;@{ok=$true;action=$taskConfig.action;components=@($taskConfig.components.id);message='功能包处理完成，个人资料保留。'}|ConvertTo-Json|Set-Content -LiteralPath $taskResult -Encoding UTF8
 }catch{
  $taskError=$_.Exception.Message
+ if($taskConfig.logPath -and (Split-Path -Parent ([IO.Path]::GetFullPath($taskConfig.logPath))) -eq (Join-Path $taskData 'community-jobs')){[IO.File]::AppendAllText($taskConfig.logPath,$taskError+[Environment]::NewLine,[Text.UTF8Encoding]::new($false))}
  for($taskI=$taskDone.Count-1;$taskI -ge 0;$taskI--){$taskItem=$taskDone[$taskI];if(Test-Path -LiteralPath $taskItem.out){Remove-Item -LiteralPath $taskItem.out -Force};if($taskItem.existed -and (Test-Path -LiteralPath $taskItem.saved)){Move-Item -LiteralPath $taskItem.saved -Destination $taskItem.out}}
  if($null -ne $taskIndexBytes){[IO.File]::WriteAllBytes($taskIndex,$taskIndexBytes)}elseif(Test-Path -LiteralPath $taskIndex){Remove-Item -LiteralPath $taskIndex}
  @{ok=$false;message='功能包安装未完成，已恢复原有文件。';detail=$taskError}|ConvertTo-Json|Set-Content -LiteralPath $taskResult -Encoding UTF8
 }finally{
- if($taskSuccess){RemoveCheckedTree $taskBackup $taskTransactions;foreach($taskComponent in $taskConfig.components){if($taskComponent.stage){RemoveCheckedTree ([IO.Path]::GetFullPath($taskComponent.stage)) (Join-Path $taskData 'community-downloads')}}}
- if($taskConfig.launch){$taskExe=Join-Path (Split-Path (Split-Path $taskRoot -Parent) -Parent) 'Jie.exe';if(Test-Path -LiteralPath $taskExe){Start-Process -FilePath $taskExe -WorkingDirectory (Split-Path $taskExe -Parent) -WindowStyle Hidden}}
+ if($taskSuccess){try{RemoveCheckedTree $taskBackup $taskTransactions;foreach($taskComponent in $taskConfig.components){if($taskComponent.stage){RemoveCheckedTree ([IO.Path]::GetFullPath($taskComponent.stage)) (Join-Path $taskData 'community-downloads')}}}catch{[IO.File]::WriteAllText((Join-Path $taskData 'community-cleanup-warning.json'),(@{installed=$true;message='安装已完成，部分临时文件清理未完成。';detail=$_.Exception.Message}|ConvertTo-Json),[Text.UTF8Encoding]::new($false))}}
+ if($taskConfig.launch){$taskExe=Join-Path (Split-Path (Split-Path $taskRoot -Parent) -Parent) 'Jie.exe';try{if(-not(Test-Path -LiteralPath $taskExe)){throw 'Jie.exe not found'};Start-Process -FilePath $taskExe -WorkingDirectory (Split-Path $taskExe -Parent) -WindowStyle Hidden}catch{[IO.File]::WriteAllText((Join-Path $taskData 'community-restart-error.json'),(@{installed=$taskSuccess;message='安装处理已结束，但自动重新打开失败，请手动打开Jie.exe。';detail=$_.Exception.Message}|ConvertTo-Json),[Text.UTF8Encoding]::new($false))}}
 }
 if(-not $taskSuccess){exit 1}
