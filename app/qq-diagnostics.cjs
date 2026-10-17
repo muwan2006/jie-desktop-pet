@@ -1,0 +1,10 @@
+'use strict';
+const titles={received:'已收到消息',merging:'等待连续消息',queued:'等待处理',prepare:'正在准备回复',transcribe:'正在识别语音',media:'正在读取图片或文件',video:'正在读取视频',search:'正在检索与核对',model:'正在等待模型',synthesize:'正在合成语音',send:'正在发送到QQ',done:'QQ已确认发送',skipped:'本轮选择不接话',canceled:'本轮已取消',failed:'本轮未完成'};
+const safe=v=>String(v||'').replace(/Bearer\s+\S+|(?:access_token|api_key|token|authorization)[=:]\s*[^\s&]+/gi,'[密钥已隐藏]').slice(0,240);
+function reason(error,stage){const s=safe(error);if(/额度|quota|429|用量/.test(s))return '模型服务额度或频率受限。到“聊聊”的连接设置检查用量，稍后再试。';if(/登录|401|权限|鉴权|密钥/.test(s))return '检查对应服务的登录或密钥。QQ扫码在“账号接入”，模型登录在“聊聊”。';if(/send_|发送|提交/.test(s)||stage==='send')return 'QQ未确认发送结果。先检查QQ收件情况与账号状态，避免重复发送。';if(/模型|回答|回复为空/.test(s)||stage==='model')return '模型未完成回答。检查聊天服务连接，或切换可用模型后重试。';if(stage==='synthesize')return '语音服务未完成合成。到“声音”检查连接；可先使用文字回复。';if(['media','video'].includes(stage))return '媒体未能读完。检查原消息是否有效，可以重新发送原图、文件或视频。';return '检查桥接与模型连接；错误说明保留在下方，可据此重试。';}
+class Diagnostics{
+ constructor(){this.rows=[];this.lastReceivedAt=0;}
+ mark(stage,m={},detail='',now=Date.now()){if(!titles[stage])return;const key=[m.type,m.target,m.id].join(':');let r=this.rows.find(r=>r.key===key);if(!r){r={key,id:String(m.id||''),type:m.type,target:m.target,started:now,steps:[]};this.rows.push(r);this.rows=this.rows.slice(-12);}if(stage==='received')this.lastReceivedAt=now;if(r.stage!==stage)r.steps.push({stage,at:now});r.steps=r.steps.slice(-16);r.previous=r.stage;r.stage=stage;r.at=now;r.detail=safe(detail);r.title=titles[stage];if(stage==='failed')r.advice=reason(detail,r.previous);else r.advice='';}
+ snapshot(connected,ready,now=Date.now()){return {bridgeConnected:!!connected,accountReady:!!ready,lastReceivedAt:this.lastReceivedAt,rows:this.rows.slice(-6).reverse().map(r=>({...r,elapsed:Math.max(0,now-r.started)})),hint:!connected?'桥接尚未连接，请启动桥接并检查端口。':!ready?'桥接已连接，QQ账号尚未确认，请检查扫码登录。':this.lastReceivedAt?'已确认收到过QQ消息，可在下方查看处理阶段。':'连接已建立，尚未收到本次启动后的新消息。可给颉发一句话观察；这本身不能证明账号正常或异常。'};}
+}
+module.exports={Diagnostics,titles,safe,reason};

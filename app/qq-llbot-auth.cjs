@@ -1,0 +1,16 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),{randomUUID}=require('node:crypto');
+const AUTH_PAGE='https://auth.luckylillia.com';
+function token(value){if(typeof value!=='string')throw Error('请填写LLBot官方提供的Auth Token。');const text=value.trim();if(!text||text.length>4096||/[\s\u0000-\u001f\u007f]/u.test(text))throw Error('LLBot授权令牌格式无效，请复制完整的Auth Token。');return text;}
+function atomic(file,bytes){fs.mkdirSync(path.dirname(file),{recursive:true});const tmp=file+'.jie-'+randomUUID()+'.tmp';try{fs.writeFileSync(tmp,bytes);fs.renameSync(tmp,file);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);}}
+function existing(file){return fs.existsSync(file)?fs.readFileSync(file):null;}
+function logOffset(file){try{return fs.statSync(file).size;}catch{return 0;}}
+function freshTail(file,start=0){let fd;try{fd=fs.openSync(file,'r');const size=fs.fstatSync(fd).size,from=Math.max(Math.min(start,size),size-16384),bytes=Buffer.alloc(Math.max(0,size-from));fs.readSync(fd,bytes,0,bytes.length,from);return bytes.toString('utf8');}catch{return '';}finally{if(fd!==undefined)fs.closeSync(fd);}}
+function launchError(log,exited=false){if(/没有\s*Auth\s*Token|no\s+auth\s*token|auth_token[^\n]*(?:不存在|为空|未配置)/i.test(log))return 'LLBot缺少启动授权令牌。请点击“获取LLBot官方授权”，取得Auth Token后在下方保存，再启动桥接。';if(/auth[^\n]*(?:invalid|expired|过期|无效|失败)|(?:授权|Auth Token)[^\n]*(?:过期|无效|失败|拒绝)/i.test(log))return 'LLBot启动授权未通过。请到官方授权页面检查或重新获取Auth Token，再保存重试。';if(/QQ[^\n]*(?:not found|找不到|不存在)/i.test(log))return 'LLBot没有找到QQ客户端，请检查QQ NT安装路径。';return exited?'LLBot启动器已退出，管理服务没有启动。请查看本机启动日志。':'LLBot管理页未就绪，请稍后重试或查看本机启动日志。';}
+class LLBotAuthorization{
+ constructor({directory,root,storage}){this.file=path.join(directory,'jie-qq-llbot-auth.enc');this.raw=path.join(root,'bin/llbot/data/auth_token.txt');this.storage=storage;}
+ configured(){try{if(fs.existsSync(this.raw)&&fs.statSync(this.raw).size<=4096&&fs.readFileSync(this.raw,'utf8').trim())return true;return fs.existsSync(this.file);}catch{return false;}}
+ save(value){const text=token(value);if(!this.storage?.isEncryptionAvailable())throw Error('Windows加密存储不可用，未保存LLBot授权。');const encrypted=this.storage.encryptString(text);let oldRaw,oldEncrypted;try{oldRaw=existing(this.raw);oldEncrypted=existing(this.file);atomic(this.raw,text);atomic(this.file,encrypted);}catch{try{if(oldRaw!==undefined){if(oldRaw===null){if(fs.existsSync(this.raw))fs.unlinkSync(this.raw);}else atomic(this.raw,oldRaw);}if(oldEncrypted!==undefined){if(oldEncrypted===null){if(fs.existsSync(this.file))fs.unlinkSync(this.file);}else atomic(this.file,oldEncrypted);}}catch{}throw Error('LLBot授权没有保存完成，请检查本机目录权限并重试。');}return {ok:true,result:'LLBot启动授权已在本机保存。是否有效由LLBot启动时验证。',authConfigured:true};}
+ require(){try{if(fs.existsSync(this.raw)){const s=fs.statSync(this.raw);if(s.size>4096)throw Error();const text=fs.readFileSync(this.raw,'utf8').trim();if(text){token(text);return;}}if(fs.existsSync(this.file)){if(!this.storage?.isEncryptionAvailable())throw Error();atomic(this.raw,token(this.storage.decryptString(fs.readFileSync(this.file))));return;}}catch{throw Error('LLBot授权无法读取，请在下方重新填写并保存Auth Token。');}throw Error(launchError('没有 Auth Token'));}
+}
+module.exports={LLBotAuthorization,AUTH_PAGE,token,logOffset,freshTail,launchError};

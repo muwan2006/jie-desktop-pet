@@ -1,0 +1,26 @@
+#qq-page-nav{display:flex;flex-wrap:wrap;gap:6px;position:sticky;top:0;z-index:6;padding:10px 0 14px;background:var(--paper,#f5f2e9);margin-bottom:10px;border-bottom:1px solid #d9d0bc}
+#qq-page-nav button{font:inherit;padding:10px 14px;border:1px solid #d8cdb8;border-radius:10px;background:#fffcf4;color:#575e52;white-space:nowrap;min-height:42px}
+#qq-page-nav button[aria-selected=true]{background:#5f705a;color:#fff;border-color:#5f705a}
+#page-qq .qq-pane[hidden]{display:none!important}
+#page-qq .qq-pane>section{margin:0 auto 18px;background:#fffcf5;border:1px solid #e1dac8;border-radius:8px;padding:20px;max-width:1100px;min-width:0;width:100%;box-sizing:border-box;scroll-margin-top:90px}
+#page-qq .qq-pane>section>h2:first-child{border-bottom:1px solid #e4dcc9;padding-bottom:12px;margin-top:0}
+#page-qq .qq-pane :is(h3,#qq-history-view,#qq-feedback-view,#qq-sticker-library){scroll-margin-top:90px}
+#page-qq .qq-pane .qq-compact-details{margin:12px 0;border:1px solid #ded6c5;border-radius:10px;padding:10px 14px;background:#fbf8ef}
+#page-qq .qq-compact-details>summary{cursor:pointer;font-weight:600;padding:4px 0}
+#qq-logs{max-height:270px;overflow:auto;overscroll-behavior:contain;padding-right:8px}
+#qq-logs p{margin:8px 0;padding:8px 10px;background:#f2eee2;border-radius:8px;font-size:.92em}
+#qq-conversations{max-height:230px;overflow:auto;overscroll-behavior:contain}
+#qq-conversations p{padding:10px 0;border-bottom:1px solid #e4dccb;display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+#qq-history-view{max-height:580px;overflow:auto;overscroll-behavior:contain;padding-right:8px}
+#qq-workshop-view .card{padding:14px;margin:12px 0;border:1px solid #dcd3c0;border-radius:10px;background:#fffcf5}
+#qq-workshop-view .card p{overflow-wrap:anywhere}
+#qq-global-save{margin-left:auto}
+#qq-pane-overview{display:grid;grid-template-columns:minmax(280px,.9fr) minmax(380px,1.25fr);gap:16px;align-items:start;grid-template-areas:"connection records" "access records"}
+#qq-pane-overview>section[data-qq-order="10"]{grid-area:connection}
+#qq-pane-overview>section[data-qq-order="20"]{grid-area:access}
+#qq-pane-overview>section[data-qq-order="30"]{grid-area:records}
+#qq-pane-overview .chat-field{grid-template-columns:1fr;gap:8px}
+#qq-pane-overview .chat-field input{min-width:0;max-width:100%;box-sizing:border-box}
+#qq-pane-overview button{margin:4px 4px 4px 0;padding:9px 12px}
+@media(max-width:1200px){#qq-pane-overview{display:block}}
+@media(max-width:1100px){#qq-page-nav button{padding:9px 11px}#qq-logs{max-height:240px}}

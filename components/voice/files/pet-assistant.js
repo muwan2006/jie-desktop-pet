@@ -1,0 +1,2 @@
+'use strict';
+(()=>{const button=document.querySelector('#assistant-badge');button.onclick=async()=>{const r=await window.jie.assistant('voice-toggle');if(r?.error){button.textContent='点击查看';button.title=r.error;}};function render(s){button.textContent=s.speech?.active?'结束说话':s.tasks?.busy?'正在办事':'语音办事';button.title=s.status+(s.shortcut?' · '+s.shortcut.replace(/Control/g,'Ctrl').replace(/\+/g,' + '):'');document.body.classList.toggle('desktop-listening',!!s.speech?.active);}window.jie.onAssistant(render);window.jie.assistant('state').then(render);})();

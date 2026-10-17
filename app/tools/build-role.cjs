@@ -1,0 +1,3 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),portable=require('../portable-files.cjs'),{validateRole}=require('../role-plugins.cjs');
+const [manifestPath,assetsPath,outputPath]=process.argv.slice(2);if(!manifestPath||!assetsPath||!outputPath||path.extname(outputPath)!=='.jie-role'){console.error('用法：node tools/build-role.cjs manifest.json 素材目录 output.jie-role');process.exit(1);}try{const manifest=JSON.parse(fs.readFileSync(manifestPath,'utf8').replace(/^\uFEFF/,'')),files=new Map(portable.collect(assetsPath,'assets/'));validateRole(manifest,files);fs.writeFileSync(outputPath,portable.encode('jie-role',manifest,files),{flag:'wx'});console.log('角色包已创建。');}catch(e){console.error(e.message);process.exit(1);}

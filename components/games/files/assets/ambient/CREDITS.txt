@@ -1,0 +1,16 @@
+Environmental sound assets (CC0 1.0)
+rain — Rain (Ambient, Not Loopable) — Ove Melaa
+https://opengameart.org/content/rain-ambient-not-loopable-2-versions-available
+https://opengameart.org/sites/default/files/Ove%20Melaa%20-%20Rainy%20%28NOT%20loopable%29.ogg
+
+pages — Old Pages/Flip with sound — yd
+https://opengameart.org/content/old-pagesflip-with-sound
+https://opengameart.org/sites/default/files/FlippingPages_0.ogg
+
+wind — Wind in trees 1.mp3 — alppdcjr12
+https://freesound.org/people/alppdcjr12/sounds/662575/
+https://cdn.freesound.org/previews/662/662575_14530623-hq.mp3
+
+License: https://creativecommons.org/publicdomain/zero/1.0/
+Edits: trims, subsonic-rumble removal, loudness matching; runtime overlap crossfades.
+Wind uses the publicly available high-quality preview supplied by Freesound.

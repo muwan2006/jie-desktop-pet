@@ -1,0 +1,170 @@
+[
+  {
+    "id": "pet-smile",
+    "label": "颉微笑",
+    "tags": [
+      "开心",
+      "问候",
+      "赞同"
+    ],
+    "file": "smile.png",
+    "animated": false
+  },
+  {
+    "id": "pet-smile-gif",
+    "label": "颉微笑（动画）",
+    "tags": [
+      "开心",
+      "问候",
+      "赞同"
+    ],
+    "file": "smile.gif",
+    "animated": true
+  },
+  {
+    "id": "pet-laugh",
+    "label": "颉大笑",
+    "tags": [
+      "好笑",
+      "调侃",
+      "开心"
+    ],
+    "file": "laugh.png",
+    "animated": false
+  },
+  {
+    "id": "pet-laugh-gif",
+    "label": "颉大笑（动画）",
+    "tags": [
+      "好笑",
+      "调侃",
+      "开心"
+    ],
+    "file": "laugh.gif",
+    "animated": true
+  },
+  {
+    "id": "pet-shy",
+    "label": "颉害羞",
+    "tags": [
+      "夸奖",
+      "害羞",
+      "摸头"
+    ],
+    "file": "shy.png",
+    "animated": false
+  },
+  {
+    "id": "pet-shy-gif",
+    "label": "颉害羞（动画）",
+    "tags": [
+      "夸奖",
+      "害羞",
+      "摸头"
+    ],
+    "file": "shy.gif",
+    "animated": true
+  },
+  {
+    "id": "pet-surprise",
+    "label": "颉惊讶",
+    "tags": [
+      "意外",
+      "吃惊"
+    ],
+    "file": "surprise.png",
+    "animated": false
+  },
+  {
+    "id": "pet-surprise-gif",
+    "label": "颉惊讶（动画）",
+    "tags": [
+      "意外",
+      "吃惊"
+    ],
+    "file": "surprise.gif",
+    "animated": true
+  },
+  {
+    "id": "pet-puzzled",
+    "label": "颉疑惑",
+    "tags": [
+      "疑问",
+      "困惑",
+      "不懂"
+    ],
+    "file": "puzzled.png",
+    "animated": false
+  },
+  {
+    "id": "pet-puzzled-gif",
+    "label": "颉疑惑（动画）",
+    "tags": [
+      "疑问",
+      "困惑",
+      "不懂"
+    ],
+    "file": "puzzled.gif",
+    "animated": true
+  },
+  {
+    "id": "pet-serious",
+    "label": "颉认真",
+    "tags": [
+      "认真",
+      "思考"
+    ],
+    "file": "serious.png",
+    "animated": false
+  },
+  {
+    "id": "pet-serious-gif",
+    "label": "颉认真（动画）",
+    "tags": [
+      "认真",
+      "思考"
+    ],
+    "file": "serious.gif",
+    "animated": true
+  },
+  {
+    "id": "pet-comfort",
+    "label": "颉安慰",
+    "tags": [
+      "安慰",
+      "陪伴"
+    ],
+    "file": "comfort.png",
+    "animated": false
+  },
+  {
+    "id": "pet-comfort-gif",
+    "label": "颉安慰（动画）",
+    "tags": [
+      "安慰",
+      "陪伴"
+    ],
+    "file": "comfort.gif",
+    "animated": true
+  },
+  {
+    "id": "pet-sleepy",
+    "label": "颉困了",
+    "tags": [
+      "晚安",
+      "疲惫"
+    ],
+    "file": "sleepy.png",
+    "animated": false
+  },
+  {
+    "id": "pet-sleepy-gif",
+    "label": "颉困了（动画）",
+    "tags": [
+      "晚安",
+      "疲惫"
+    ],
+    "file": "sleepy.gif",
+    "animated": true
+  }
+]

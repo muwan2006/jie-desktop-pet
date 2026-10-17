@@ -1,0 +1,6 @@
+'use strict';
+const catalog=[{id:'76',name:'赞'},{id:'182',name:'笑哭'},{id:'32',name:'疑问'},{id:'99',name:'鼓掌'},{id:'171',name:'茶'},{id:'271',name:'吃瓜'},{id:'319',name:'比心'}];
+function normalize(v){if(v?.messageId!==undefined&&v.messageId!==''&&!/^-?\d{1,30}$/.test(String(v.messageId)))return null;if(!v||typeof v!=='object'||!catalog.some(e=>e.id===String(v.emoji)))return null;return {emoji:String(v.emoji),messageId:/^-?\d{1,30}$/.test(String(v.messageId||''))?String(v.messageId):''};}
+function target(v,m,c){v=normalize(v);if(!v||m.type!=='group')return null;const id=v.messageId||m.id,row=c.history.find(h=>h.role==='user'&&h.messageId===id&&!h.recalled&&!h.catchup);if(!row||m.topic&&row.topic!==m.topic&&id!==m.id&&id!==m.replyId||!(/^-?\d{1,30}$/).test(id)||row.at<m.at-300000||row.at>m.at)return null;return {...v,messageId:id};}
+async function send(v,m,c,{transport,current}){const reaction=target(v,m,c);if(!reaction||!current())return false;const result=await transport.request('set_msg_emoji_like',{message_id:reaction.messageId,emoji_id:reaction.emoji,set:true},12000);if(result===false||result?.result===false)throw Error('QQ未确认表情回应成功');return true;}
+module.exports={catalog,normalize,target,send};

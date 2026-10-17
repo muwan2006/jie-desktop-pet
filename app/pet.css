@@ -1,0 +1,11 @@
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent;user-select:none;font-family:'Microsoft YaHei','Segoe UI',sans-serif}#pet{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:230.4px;height:249.6px;cursor:grab;outline:none}#pet:active{cursor:grabbing}#pet:focus-visible{filter:drop-shadow(0 0 3px #dcaa58)}#bubble{position:absolute;top:5px;left:12px;right:12px;padding:12px 15px;color:#554638;font-size:13px;line-height:1.6;background:#fff9eeef;border:1px solid #d5bb8b;border-radius:16px;box-shadow:0 4px 12px #35261715;text-align:center;pointer-events:none}#bubble:after{content:'';position:absolute;bottom:-7px;left:48%;width:12px;height:12px;background:#fff9ee;transform:rotate(45deg);border-right:1px solid #d5bb8b;border-bottom:1px solid #d5bb8b}#timer{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);z-index:2;border:1px solid #ba9870;border-radius:12px;padding:4px 10px;background:#fff8e9f5;color:#705133;font-size:11px;cursor:pointer}[hidden]{display:none!important}body.letting-pass{pointer-events:none}
+
+#voice-badge{position:absolute;right:12px;top:6px;max-width:calc(100% - 24px);white-space:nowrap;border:1px solid #b5a782;border-radius:12px;background:#f6f0df;color:#4a5145;padding:5px 8px;font-size:10px;z-index:4;cursor:pointer}body.speaking #bubble{border-color:#a58b52;box-shadow:0 0 6px #c5ad7444}
+
+#bubble{max-height:calc(100% - 55px);overflow-y:auto;scrollbar-width:thin}#bubble:after{display:none}
+
+#watch-badge{position:absolute;bottom:5px;right:5px;z-index:5;border:1px solid #859878;border-radius:10px;background:#f6f3ebf5;color:#465c41;font-size:10px;padding:3px 7px;cursor:pointer}body.watching #timer{left:8px;transform:none}
+
+#assistant-badge{position:absolute;bottom:5px;left:5px;z-index:5;border:1px solid #b48b58;border-radius:10px;background:#fff8eaf0;color:#74512f;font-size:10px;padding:3px 7px;cursor:pointer}body.desktop-listening #assistant-badge{background:#617868;color:white}#timer{bottom:32px}body.watching #timer{left:50%;transform:translateX(-50%)}
+
+#call-badge{position:absolute;left:5px;bottom:30px;z-index:6;max-width:calc(100% - 10px);border:1px solid #647f6d;border-radius:10px;background:#f6f3ebf5;color:#365441;font-size:10px;padding:3px 7px;cursor:pointer}

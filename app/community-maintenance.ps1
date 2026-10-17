@@ -1,0 +1,36 @@
+﻿param([Parameter(Mandatory=$true)][string]$Job)
+$ErrorActionPreference='Stop'
+[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false)
+$taskConfig=Get-Content -LiteralPath $Job -Encoding UTF8 -Raw | ConvertFrom-Json
+$taskRoot=[IO.Path]::GetFullPath($taskConfig.root);$taskData=[IO.Path]::GetFullPath($taskConfig.directory)
+$taskPackage=Get-Content -LiteralPath (Join-Path $taskRoot 'package.json') -Encoding UTF8 -Raw | ConvertFrom-Json
+if($taskPackage.name -ne 'jie-desktop-pet-community' -or (Split-Path -Leaf $taskRoot) -ne 'app' -or $taskConfig.action -notin @('install','uninstall')){throw 'Not a community installation'}
+$taskTransactions=Join-Path $taskData 'community-transactions';$taskBackup=Join-Path $taskTransactions ([Guid]::NewGuid().ToString())
+$taskIndex=Join-Path $taskRoot 'community-installed.json';$taskIndexBytes=$null;if(Test-Path -LiteralPath $taskIndex){$taskIndexBytes=[IO.File]::ReadAllBytes($taskIndex)}
+$taskDone=New-Object System.Collections.Generic.List[object]
+function Relative([string]$name){if(-not $name -or $name.Contains('\') -or $name.Contains(':') -or $name.StartsWith('/') -or @($name.Split('/')|Where-Object {$_ -in @('','..','.')}).Count){throw 'Invalid component file path'};return $name}
+function Checked([string]$base,[string]$name){$taskFull=[IO.Path]::GetFullPath((Join-Path $base (Relative $name)));if(-not $taskFull.StartsWith($base+'\',[StringComparison]::OrdinalIgnoreCase)){throw 'Path escaped component root'};return $taskFull}
+function Digest([string]$file){$taskHasher=[Security.Cryptography.SHA256]::Create();$taskInput=[IO.File]::OpenRead($file);try{return ([BitConverter]::ToString($taskHasher.ComputeHash($taskInput))).Replace('-','').ToLowerInvariant()}finally{$taskInput.Dispose();$taskHasher.Dispose()}}
+function CheckParents([string]$file){$taskCursor=Split-Path -Parent $file;while($taskCursor -and $taskCursor.Length -ge $taskRoot.Length){if((Test-Path -LiteralPath $taskCursor) -and (Get-Item -LiteralPath $taskCursor -Force).Attributes.HasFlag([IO.FileAttributes]::ReparsePoint)){throw 'Reparse point in installation path'};if($taskCursor -eq $taskRoot){break};$taskCursor=Split-Path -Parent $taskCursor}}
+function RemoveCheckedTree([string]$target,[string]$parent){$taskAbsolute=[IO.Path]::GetFullPath($target);if((Split-Path -Parent $taskAbsolute) -ne $parent -or -not $taskAbsolute.StartsWith($parent+'\',[StringComparison]::OrdinalIgnoreCase)){throw 'Cleanup escaped allowed directory'};if(Test-Path -LiteralPath $taskAbsolute){$taskEntries=@(Get-Item -LiteralPath $taskAbsolute -Force)+@(Get-ChildItem -LiteralPath $taskAbsolute -Recurse -Force);if($taskEntries|Where-Object {$_.Attributes.HasFlag([IO.FileAttributes]::ReparsePoint)}){throw 'Cleanup contains links'};Remove-Item -LiteralPath $taskAbsolute -Recurse -Force}}
+$taskResult=Join-Path $taskData 'community-last-result.json';$taskSuccess=$false
+try{
+ for($taskWait=0;$taskWait -lt 120;$taskWait++){if(-not(Get-Process -Id $taskConfig.pid -ErrorAction SilentlyContinue)){break};Start-Sleep -Milliseconds 500}
+ if(Get-Process -Id $taskConfig.pid -ErrorAction SilentlyContinue){throw 'Community app did not exit'}
+ $taskOwned=@{};$taskComponents=@{};foreach($taskComponent in $taskConfig.installed.PSObject.Properties){$taskComponents[$taskComponent.Name]=$taskComponent.Value;foreach($taskFile in $taskComponent.Value.files.PSObject.Properties){$taskOwned[$taskFile.Name]=$taskFile.Value}}
+ $taskCore=@{};foreach($taskFile in $taskConfig.core.PSObject.Properties){$taskCore[$taskFile.Name]=$taskFile.Value}
+ foreach($taskComponent in $taskConfig.components){if($taskComponent.id -notmatch '^[a-z][a-z0-9-]{0,40}$'){throw 'Invalid component identifier'};foreach($taskFile in $taskComponent.files.PSObject.Properties){$taskName=Relative $taskFile.Name;if($taskCore.ContainsKey($taskName)){throw 'Cannot overwrite community core'};$taskOut=Checked $taskRoot $taskName;CheckParents $taskOut;if(Test-Path -LiteralPath $taskOut){if(-not $taskOwned.ContainsKey($taskName) -or (Get-Item -LiteralPath $taskOut).Attributes.HasFlag([IO.FileAttributes]::ReparsePoint) -or (Digest $taskOut) -ne $taskOwned[$taskName]){throw 'Existing file is not an unchanged owned component'}};if($taskConfig.action -eq 'install'){$taskSource=Checked ([IO.Path]::GetFullPath((Join-Path $taskComponent.stage 'files'))) $taskName;if((Digest $taskSource) -ne $taskFile.Value){throw 'Staged component hash changed'}}}}
+ [IO.Directory]::CreateDirectory($taskBackup)|Out-Null
+ foreach($taskComponent in $taskConfig.components){foreach($taskFile in $taskComponent.files.PSObject.Properties){$taskOut=Checked $taskRoot $taskFile.Name;$taskSaved=Checked $taskBackup $taskFile.Name;$taskExisted=Test-Path -LiteralPath $taskOut;if($taskExisted){[IO.Directory]::CreateDirectory((Split-Path -Parent $taskSaved))|Out-Null;Move-Item -LiteralPath $taskOut -Destination $taskSaved};$taskDone.Add(@{out=$taskOut;saved=$taskSaved;existed=$taskExisted});if($taskConfig.action -eq 'install'){[IO.Directory]::CreateDirectory((Split-Path -Parent $taskOut))|Out-Null;Copy-Item -LiteralPath (Checked ([IO.Path]::GetFullPath((Join-Path $taskComponent.stage 'files'))) $taskFile.Name) -Destination $taskOut;if((Digest $taskOut) -ne $taskFile.Value){throw 'Installed file hash mismatch'}}};if($taskConfig.action -eq 'install'){$taskComponents[$taskComponent.id]=@{version=$taskComponent.version;enabled=$true;dependencies=@($taskComponent.dependencies);files=$taskComponent.files}}else{$taskComponents.Remove($taskComponent.id)}}
+ $taskNext=Join-Path $taskRoot ('community-installed.'+[Guid]::NewGuid().ToString()+'.tmp');@{schema=1;components=$taskComponents}|ConvertTo-Json -Depth 20|Set-Content -LiteralPath $taskNext -Encoding UTF8;Move-Item -LiteralPath $taskNext -Destination $taskIndex -Force
+ $taskSuccess=$true;@{ok=$true;action=$taskConfig.action;components=@($taskConfig.components.id);message='功能包处理完成，个人资料保留。'}|ConvertTo-Json|Set-Content -LiteralPath $taskResult -Encoding UTF8
+}catch{
+ $taskError=$_.Exception.Message
+ for($taskI=$taskDone.Count-1;$taskI -ge 0;$taskI--){$taskItem=$taskDone[$taskI];if(Test-Path -LiteralPath $taskItem.out){Remove-Item -LiteralPath $taskItem.out -Force};if($taskItem.existed -and (Test-Path -LiteralPath $taskItem.saved)){Move-Item -LiteralPath $taskItem.saved -Destination $taskItem.out}}
+ if($null -ne $taskIndexBytes){[IO.File]::WriteAllBytes($taskIndex,$taskIndexBytes)}elseif(Test-Path -LiteralPath $taskIndex){Remove-Item -LiteralPath $taskIndex}
+ @{ok=$false;message='功能包安装未完成，已恢复原有文件。';detail=$taskError}|ConvertTo-Json|Set-Content -LiteralPath $taskResult -Encoding UTF8
+}finally{
+ if($taskSuccess){RemoveCheckedTree $taskBackup $taskTransactions;foreach($taskComponent in $taskConfig.components){if($taskComponent.stage){RemoveCheckedTree ([IO.Path]::GetFullPath($taskComponent.stage)) (Join-Path $taskData 'community-downloads')}}}
+ if($taskConfig.launch){$taskExe=Join-Path (Split-Path (Split-Path $taskRoot -Parent) -Parent) 'Jie.exe';if(Test-Path -LiteralPath $taskExe){Start-Process -FilePath $taskExe -WorkingDirectory (Split-Path $taskExe -Parent) -WindowStyle Hidden}}
+}
+if(-not $taskSuccess){exit 1}

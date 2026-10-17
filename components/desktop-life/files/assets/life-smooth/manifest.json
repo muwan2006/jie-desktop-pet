@@ -1,0 +1,56 @@
+{
+  "seat": [
+    "seat-0.webp",
+    "seat-1.webp",
+    "seat-2.webp",
+    "seat-3.webp",
+    "seat-4.webp",
+    "seat-5.webp",
+    "seat-6.webp",
+    "seat-7.webp",
+    "seat-8.webp",
+    "seat-9.webp",
+    "seat-10.webp",
+    "seat-11.webp",
+    "seat-12.webp",
+    "seat-13.webp",
+    "seat-14.webp",
+    "seat-15.webp"
+  ],
+  "listen": [
+    "listen-0.webp",
+    "listen-1.webp",
+    "listen-2.webp",
+    "listen-3.webp",
+    "listen-4.webp",
+    "listen-5.webp",
+    "listen-6.webp",
+    "listen-7.webp",
+    "listen-8.webp",
+    "listen-9.webp",
+    "listen-10.webp",
+    "listen-11.webp",
+    "listen-12.webp",
+    "listen-13.webp",
+    "listen-14.webp",
+    "listen-15.webp"
+  ],
+  "rps-rock": [
+    "rps-rock-0.webp",
+    "rps-rock-1.webp",
+    "rps-rock-2.webp",
+    "rps-rock-3.webp"
+  ],
+  "rps-paper": [
+    "rps-paper-0.webp",
+    "rps-paper-1.webp",
+    "rps-paper-2.webp",
+    "rps-paper-3.webp"
+  ],
+  "rps-scissors": [
+    "rps-scissors-0.webp",
+    "rps-scissors-1.webp",
+    "rps-scissors-2.webp",
+    "rps-scissors-3.webp"
+  ]
+}

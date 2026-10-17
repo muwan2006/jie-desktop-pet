@@ -1,0 +1,15 @@
+'use strict';
+const Evidence=require('./memory-evidence.cjs'),Life=require('./companionship.cjs'),Threads=require('./conversation-threads.cjs'),QQMemory=require('./qq-memory.cjs');
+function rows(chat,qq){const d=chat.data(),out=[],base=(kind,x)=>({id:kind+':'+x.id,kind,text:String(x.text||x.title||'').slice(0,1000),at:Number(x.updatedAt||x.at)||0,sourceQuote:String(x.sourceQuote||x.quote||'').slice(0,1000),sourceId:x.sourceId||'',status:x.manual||x.corrected||x.edited?'你确认或更正过':'来自已有记录'});for(const x of d.memories||[])out.push(base('memory',x));for(const x of d.life.experiences||[])out.push(base('experience',x));for(const x of d.life.topics||[])if(x.status==='open')out.push({...base('topic',x),status:'仍待后续'});
+ if(qq?.self){const c=qq.sessions[qq.key({type:'private',target:qq.settings.owner})];for(const x of c?.memory?.notes||[])if(x.sender===qq.settings.owner)out.push({...base('qq', {...x,text:x.correction||x.quote,updatedAt:x.correctedAt,sourceId:x.sourceId}),status:x.correction?'你在桌宠更正过的QQ记忆':'你的QQ私聊原话'});}
+ return out.sort((a,b)=>b.at-a.at).slice(0,400);
+}
+function source(chat,qq,id){const row=rows(chat,qq).find(x=>x.id===id);if(!row)throw Error('这条记录已不在当前账号中。');if(['memory','experience'].includes(row.kind))return Evidence.source(chat.data(),row.kind,id.slice(row.kind.length+1));if(row.kind==='qq'){const c=qq.sessions[qq.key({type:'private',target:qq.settings.owner})],h=c.history?.find(x=>x.messageId===row.sourceId&&x.sender===qq.settings.owner);return {text:row.text,sourceQuote:row.sourceQuote,originAvailable:!!h,exchange:h?[{role:'user',text:h.text,at:h.at}]:[]};}const d=chat.data();const h=Object.values(d.threads).flatMap(t=>t.history).find(h=>h.id===row.sourceId);return {text:row.text,sourceQuote:row.sourceQuote,originAvailable:!!h,exchange:h?[{role:h.role,text:h.text,at:h.at}]:[]};}
+function change(chat,qq,id,value,forget=false){if(chat.busy||qq?.busy)throw Error('等当前回复完成再整理记忆。');const row=rows(chat,qq).find(x=>x.id===id);if(!row)throw Error('这条记录已不在当前账号中。');const raw=id.slice(row.kind.length+1),d=chat.data(),text=String(value||'').trim().slice(0,1000);if(!forget&&!text)throw Error('请填写更正后的内容。');
+ if(row.kind==='qq'){const c=qq.sessions[qq.key({type:'private',target:qq.settings.owner})];if(forget)QQMemory.forget(c,raw);else{const note=c.memory.notes.find(x=>x.id===raw);note.correction=text;note.correctedAt=Date.now();c.summary='';}qq.emit();}
+ else if(row.kind==='topic'){if(forget)d.life.topics=d.life.topics.filter(t=>t.id!==raw);else{const t=d.life.topics.find(t=>t.id===raw);t.title=text.slice(0,100);t.manual=true;t.updatedAt=Date.now();}Threads.invalidateSummaries(d);}
+ else if(!forget)Evidence.change(d,raw,text);
+ else{const x=(row.kind==='memory'?d.memories:d.life.experiences).find(x=>x.id===raw);if(x.sourceId){for(const t of Object.values(d.threads))Life.suppressExchange(d.life,t.history,x.sourceId);if(!d.life.excludedSources.includes(x.sourceId))d.life.excludedSources.push(x.sourceId);}if(row.kind==='memory')d.memories=d.memories.filter(x=>x.id!==raw);else Life.forgetExperience(d.life,raw);Threads.invalidateSummaries(d);}
+ chat.emit();return {ok:true};
+}
+module.exports={rows,source,change};

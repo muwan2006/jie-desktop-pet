@@ -1,0 +1,38 @@
+{
+  "seat": [
+    "seat-0.webp",
+    "seat-1.webp",
+    "seat-2.webp",
+    "seat-3.webp"
+  ],
+  "float": [
+    "float-0.webp",
+    "float-1.webp",
+    "float-2.webp",
+    "float-3.webp"
+  ],
+  "listen": [
+    "listen-0.webp",
+    "listen-1.webp",
+    "listen-2.webp",
+    "listen-3.webp"
+  ],
+  "tea": [
+    "tea-0.webp",
+    "tea-1.webp",
+    "tea-2.webp",
+    "tea-3.webp"
+  ],
+  "crane": [
+    "crane-0.webp",
+    "crane-1.webp",
+    "crane-2.webp",
+    "crane-3.webp"
+  ],
+  "write": [
+    "write-0.webp",
+    "write-1.webp",
+    "write-2.webp",
+    "write-3.webp"
+  ]
+}

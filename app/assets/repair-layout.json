@@ -1,0 +1,134 @@
+{
+  "classic-comfort": {
+    "file": "repair-1.7.3/classic-comfort.png",
+    "width": 384,
+    "height": 416,
+    "frames": 6
+  },
+  "classic-laugh": {
+    "file": "repair-1.7.3/classic-laugh.png",
+    "width": 384,
+    "height": 416,
+    "frames": 6
+  },
+  "classic-puzzled": {
+    "file": "repair-1.7.3/classic-puzzled.png",
+    "width": 384,
+    "height": 416,
+    "frames": 6
+  },
+  "classic-serious": {
+    "file": "repair-1.7.3/classic-serious.png",
+    "width": 384,
+    "height": 416,
+    "frames": 6
+  },
+  "classic-shy": {
+    "file": "repair-1.7.3/classic-shy.png",
+    "width": 384,
+    "height": 416,
+    "frames": 6
+  },
+  "classic-sleepy": {
+    "file": "repair-1.7.3/classic-sleepy.png",
+    "width": 384,
+    "height": 416,
+    "frames": 6
+  },
+  "classic-smile": {
+    "file": "repair-1.7.3/classic-smile.png",
+    "width": 384,
+    "height": 416,
+    "frames": 6
+  },
+  "classic-surprise": {
+    "file": "repair-1.7.3/classic-surprise.png",
+    "width": 384,
+    "height": 416,
+    "frames": 6
+  },
+  "desk-chin": {
+    "file": "repair-1.7.3/desk-chin.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-idea": {
+    "file": "repair-1.7.3/desk-idea.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-inspect": {
+    "file": "repair-1.7.3/desk-inspect.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-laugh": {
+    "file": "repair-1.7.3/desk-laugh.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-nod": {
+    "file": "repair-1.7.3/desk-nod.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-puzzled": {
+    "file": "repair-1.7.3/desk-puzzled.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-relief": {
+    "file": "repair-1.7.3/desk-relief.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-rub": {
+    "file": "repair-1.7.3/desk-rub.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-shy": {
+    "file": "repair-1.7.3/desk-shy.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-sleepy": {
+    "file": "repair-1.7.3/desk-sleepy.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-smile": {
+    "file": "repair-1.7.3/desk-smile.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-stretch": {
+    "file": "repair-1.7.3/desk-stretch.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-think": {
+    "file": "repair-1.7.3/desk-think.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  },
+  "desk-typo": {
+    "file": "repair-1.7.3/desk-typo.png",
+    "width": 512,
+    "height": 512,
+    "frames": 6
+  }
+}

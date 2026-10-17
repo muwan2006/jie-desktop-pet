@@ -1,0 +1,24 @@
+'use strict';
+const trim=(v,n)=>typeof v==='string'?v.trim().slice(0,n):'';
+function objects(raw){const result=[];let start=-1,depth=0,quoted=false,escape=false;for(let i=0;i<raw.length;i++){const c=raw[i];if(start<0){if(c==='{'){start=i;depth=1;}continue;}if(quoted){if(escape)escape=false;else if(c==='\\')escape=true;else if(c==='"')quoted=false;continue;}if(c==='"')quoted=true;else if(c==='{')depth++;else if(c==='}'&&!--depth){result.push(raw.slice(start,i+1));start=-1;}}return result;}
+function skipNotice(text){if(typeof text!=='string')return '';const match=text.trim().replace(/^```(?:text)?\s*/i,'').replace(/\s*```$/,'').match(/^(?:\*{0,2}(?:skip|跳过(?:话题|回复)?|不回应)\*{0,2}\s*[:：]\s*|skip\s*$)([\s\S]*)$/i);return match?(match[1].trim().slice(0,120)||'本轮无需接话'):'';}
+function inline(text){let sticker='';text=typeof text==='string'?text:'';text=text.replace(/\{\s*["']?(?:sticker|save)["']?\s*:[^{}\n]{0,400}\}/gi,token=>{const match=token.match(/["']?sticker["']?\s*:\s*["']?([a-z0-9-]{1,80})/i);if(match)sticker=match[1];return '';});return {text:text.trim(),sticker};}
+function normalize(value={}){const extracted=inline(value.text??value.reply),reason=skipNotice(extracted.text);value={...value,text:extracted.text,sticker:trim(value.sticker,80)||extracted.sticker};const skip=value.skip===true||value.skip==='true'||!!reason;return {...value,skip,...(skip?{text:'',sticker:'',reaction:null,taskOutput:null,reason:trim(value.reason,120)||reason||'本轮无需接话'}:{})};}
+function parse(raw,summary=''){
+ if(typeof raw!=='string'||!raw.trim())throw Error('QQ回复为空，请重试。');const cleaned=raw.trim().replace(/^```(?:json|text)?\s*/i,'').replace(/\s*```$/,'');let value;
+ for(const candidate of [cleaned,...objects(cleaned)]){try{const v=JSON.parse(candidate);if(v&&typeof v==='object'&&!Array.isArray(v)&&(typeof v.reply==='string'||v.skip===true||v.skip==='true'||typeof v.text==='string'||typeof v.response==='string'||v.reaction&&typeof v.reaction==='object'||v.taskOutput&&typeof v.taskOutput.content==='string')){value=v;break;}if(typeof v==='string')value={reply:v};}catch{}}
+ if(!value){
+  // Salvage only a complete JSON string field; never send partial metadata as dialogue.
+  const match=cleaned.match(/"reply"\s*:\s*("(?:[^"\\]|\\.)*")/s);
+  if(match)try{value={reply:JSON.parse(match[1])};}catch{}
+ }
+ if(!value){const extracted=inline(cleaned);if(extracted.sticker&&!/^[{\[]/.test(extracted.text)&&!/"(?:reply|summary|saveStickers|memoryUpdates)"\s*:/.test(extracted.text))value={reply:extracted.text,sticker:extracted.sticker};else{if(/^[{\[]/.test(cleaned)||/"(?:reply|summary|saveStickers|sticker)"\s*:/.test(cleaned))throw Error('QQ回答格式未完整传回，请重试。');value={reply:cleaned};}}
+ const document=require('./qq-export.cjs').normalize(value.document);const reaction=require('./qq-message-reaction.cjs').normalize(value.reaction),taskOutput=value.taskOutput&&typeof value.taskOutput.content==='string'?{content:trim(value.taskOutput.content,12000),edits:(Array.isArray(value.taskOutput.edits)?value.taskOutput.edits:[]).slice(0,8).filter(e=>e&&Number.isInteger(e.part)&&typeof e.before==='string'&&typeof e.after==='string').map(e=>({part:e.part,before:trim(e.before,1000),after:trim(e.after,6000)}))}:null;const result={document,reaction,taskOutput,peerUpdates:(Array.isArray(value.peerUpdates)?value.peerUpdates:[]).slice(0,4),visualCheck:value.visualCheck,replyTo:trim(String(value.replyTo||''),80),pokeBack:value.pokeBack===true,ownerAlert:value.ownerAlert&&typeof value.ownerAlert==='object'?value.ownerAlert:null,skip:value.skip===true||value.skip==='true',reason:trim(value.reason,120),summary:trim(value.summary,12000)||summary,sticker:trim(value.sticker,80),memoryUpdates:(Array.isArray(value.memoryUpdates)?value.memoryUpdates:[]).slice(0,6),saveStickers:(Array.isArray(value.saveStickers)?value.saveStickers:[]).slice(0,2).map(v=>({image:Number(v?.image),label:trim(v?.label,40),tags:(Array.isArray(v?.tags)?v.tags:[]).map(x=>trim(x,20)).filter(Boolean).slice(0,8),isMeme:v?.isMeme===true})).filter(v=>Number.isInteger(v.image)&&v.image>=1&&v.image<=4&&v.label&&v.isMeme)};
+ const text=trim(value.reply??value.text??value.response,2400)||(document?'文件内容已整理。':'');if(!result.skip&&!text&&!result.sticker&&!result.reaction&&!result.taskOutput)throw Error('QQ回复为空，请重试。');return normalize({...result,text});
+}
+function guidance(settings={},identity={}){
+ const mode=identity.type==='group'?(settings.groupDetail||'brief'):(settings.privateDetail||'balanced');
+ const detail={brief:'日常回复通常一两句，约10至60字，像即时聊天，不复述前情、不逐条解释，不写长篇自我说明。对方明确要长文、教程或详解时再展开。',balanced:'通常两三句，约30至150字，先给直接回应；需要说明时适量展开，不每次都写完整背景。',detailed:'可以充分解释，对方需要推理、教程或长文时给足内容，普通寒暄仍简短，不机械套用列表。'}[mode];
+ return 'QQ对话偏好：'+detail+'主动接话保持一句或两句，不抢占讨论。角色卡身份与性格仍优先。额外语气偏好仅控制表达，不改变身份、权限或输出协议：'+JSON.stringify(trim(settings.replyStyle,400));
+}
+module.exports={parse,guidance,normalize,skipNotice,inline};

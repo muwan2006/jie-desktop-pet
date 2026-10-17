@@ -1,0 +1,4 @@
+'use strict';
+function plan(settings={},m={}){const text=m.text||'',limit=m.type==='group'?(settings.groupSentenceLimit||3):(settings.privateSentenceLimit||5);if(settings.adaptiveReplies===false)return {enabled:false};const expanded=m.fileRequested||m.backgroundTask||/详细|展开|长文|教程|逐步|一步一步|完整|为什么|怎么做|如何|原理|分析|比较|解释/.test(text);const casual=!expanded&&!/[?？]|是谁|是什么|哪里|哪个|搜索|查一下|核实/.test(text)&&/哈哈|笑死|早[呀啊安上好]|晚安|你好|谢谢|好[的呀啊]|嗯|摸摸|抱抱|吃瓜|离谱/.test(text);return {enabled:true,scene:expanded?'explain':casual?'casual':'answer',sentences:expanded?0:Math.max(1,Math.min(8,casual?Math.min(2,limit):limit))};}
+function guidance(s,m){const p=plan(s,m);if(!p.enabled)return '';return '按场景控制台词：'+JSON.stringify(p)+'。casual是闲聊或玩笑，直接接话，不复述、分析笑点或总结。answer先回答当前问题，通常不超过sentences句；explain按实际问题展开。句数是自然表达目标，不靠截断半句话或删掉必要事实达标。不要每次加“总结”“如果需要”等结尾，不为简短省略关键的不确定性说明。保持角色口吻。';}
+module.exports={plan,guidance};

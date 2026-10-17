@@ -1,0 +1,13 @@
+{
+  "frameWidth": 768,
+  "frameHeight": 832,
+  "anchor": [
+    315,
+    120
+  ],
+  "frames": [
+    "hang-0.webp",
+    "hang-1.webp"
+  ],
+  "hasExternalHand": false
+}

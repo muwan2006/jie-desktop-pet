@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "license": "CC0-1.0",
+  "assets": [
+    {
+      "name": "rain",
+      "title": "Rain (Ambient, Not Loopable)",
+      "author": "Ove Melaa",
+      "page": "https://opengameart.org/content/rain-ambient-not-loopable-2-versions-available",
+      "download": "https://opengameart.org/sites/default/files/Ove%20Melaa%20-%20Rainy%20%28NOT%20loopable%29.ogg",
+      "license": "CC0-1.0",
+      "bytes": 1633276,
+      "sha256": "5083851776c2b3ff56b81550672d7f697efcdb88f605f83402d7dfc91c56b476",
+      "file": "rain.ogg",
+      "output_sha256": "0162d6760584c7f973fe9ecbd28442a598623fd096e21278581a35c771669aa8",
+      "output_bytes": 1480232,
+      "duration": 66.00126984126985,
+      "rms": 0.0300857312977314,
+      "peak": 0.3131570518016815,
+      "envelope_variation": 0.42319142159778134,
+      "processing": "atrim=start=6:end=72,asetpts=PTS-STARTPTS,highpass=f=75,loudnorm=I=-26:TP=-3:LRA=9",
+      "loop_crossfade_seconds": 4
+    },
+    {
+      "name": "pages",
+      "title": "Old Pages/Flip with sound",
+      "author": "yd",
+      "page": "https://opengameart.org/content/old-pagesflip-with-sound",
+      "download": "https://opengameart.org/sites/default/files/FlippingPages_0.ogg",
+      "license": "CC0-1.0",
+      "bytes": 9906,
+      "sha256": "d76f9ed7080b8b1a050a942f59f07e03ed35867b8cc6b5eac78f6478e3cbc283",
+      "file": "pages.ogg",
+      "output_sha256": "350edd03bcf3ef627d7c58ad6405c5a97830c4f2b3161726d08566ccf09891e7",
+      "output_bytes": 17348,
+      "duration": 0.603718820861678,
+      "rms": 0.01614890620112419,
+      "peak": 0.395111083984375,
+      "envelope_variation": 0.0,
+      "processing": "highpass=f=160,loudnorm=I=-24:TP=-5:LRA=8",
+      "loop_crossfade_seconds": 0
+    },
+    {
+      "name": "wind",
+      "title": "Wind in trees 1.mp3",
+      "author": "alppdcjr12",
+      "page": "https://freesound.org/people/alppdcjr12/sounds/662575/",
+      "download": "https://cdn.freesound.org/previews/662/662575_14530623-hq.mp3",
+      "license": "CC0-1.0",
+      "bytes": 1098722,
+      "sha256": "2c85fc702cdd0ff6c60a184766b6149d89063d2e60a6a426d5e28d8f6a1d00f6",
+      "file": "wind.ogg",
+      "output_sha256": "87f81163601ab3b3b7fe29d6421e8c61a7f511c86e09aab48b3e24cb996f1a30",
+      "output_bytes": 1202396,
+      "duration": 40.00072562358277,
+      "rms": 0.02695690654218197,
+      "peak": 0.23689478635787964,
+      "envelope_variation": 0.3195063859448185,
+      "processing": "atrim=start=3:end=43,asetpts=PTS-STARTPTS,highpass=f=130,loudnorm=I=-27:TP=-4:LRA=10",
+      "loop_crossfade_seconds": 4
+    }
+  ]
+}

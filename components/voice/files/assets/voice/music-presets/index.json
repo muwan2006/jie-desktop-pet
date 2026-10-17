@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "voice": "existing trained Jie model",
+  "clips": [
+    {
+      "id": "music-steady",
+      "kind": "steady",
+      "text": "这个拍子挺稳，听着很踏实。",
+      "file": "music-steady.wav",
+      "duration": 3.28,
+      "sha256": "ef765467f7c9e1d96bbb23ec1401283ab8dec7a22fa1b7ddc835f2107774f640"
+    },
+    {
+      "id": "music-brisk",
+      "kind": "brisk",
+      "text": "节奏快起来了，脚步也想跟着走。",
+      "file": "music-brisk.wav",
+      "duration": 3.2,
+      "sha256": "21501f190ab83900d9537729c86269c97a9f617ec47ef6ddf5d15a8bf41be4f3"
+    },
+    {
+      "id": "music-gentle",
+      "kind": "gentle",
+      "text": "轻轻的，像一页书慢慢翻过去。",
+      "file": "music-gentle.wav",
+      "duration": 3.62,
+      "sha256": "43431d2dec89fd391254731db0ae30b9bf3caa644e14e8eacb9d0fe83b26f770"
+    },
+    {
+      "id": "music-rise",
+      "kind": "rise",
+      "text": "这一段有劲，我也跟着精神起来了。",
+      "file": "music-rise.wav",
+      "duration": 3.12,
+      "sha256": "e05e0b6b74a38df0ddcd313ca17a099e5b17a5df681e7371296dfa6f258869a6"
+    },
+    {
+      "id": "music-fall",
+      "kind": "fall",
+      "text": "这会儿缓下来，正好松口气。",
+      "file": "music-fall.wav",
+      "duration": 3,
+      "sha256": "295085654f6e60e7299de7db1b1676ef4c130a2fed6ff13173397943c24323ac"
+    },
+    {
+      "id": "music-loose",
+      "kind": "loose",
+      "text": "这一段的拍子不太整齐，我先慢慢跟着。",
+      "file": "music-loose.wav",
+      "duration": 3.76,
+      "sha256": "804730a5ca31066865ef3f67ffc4e9e61968dcbf653ea6beaf1a6df4d4f4eea6"
+    },
+    {
+      "id": "music-return",
+      "kind": "return",
+      "text": "又接上了，就跟着这一拍走吧。",
+      "file": "music-return.wav",
+      "duration": 3.28,
+      "sha256": "2e326bbdee4676738ff58867111d73828770740d727333d11cd5f8da351628e4"
+    },
+    {
+      "id": "music-company",
+      "kind": "company",
+      "text": "先把手边的事搁一搁，一起听一会儿。",
+      "file": "music-company.wav",
+      "duration": 3.92,
+      "sha256": "48d8e42b324aeeaa37ac28d852a5192eb8586eec596a2ebcd11b38fc647fe362"
+    }
+  ]
+}

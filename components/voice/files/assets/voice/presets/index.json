@@ -1,0 +1,385 @@
+{
+  "version": 1,
+  "voice": "jie-e15 / jie_e20_s3600",
+  "reference": "D:/下载/软件/Jie-Desktop-Pet-Windows-x64/GPT-SoVITS-v2pro-20250604/logs/jie/5-wav32k/jie.mp3_0000258240_0000501120.wav",
+  "created": "2026-10-02T09:28:12.152Z",
+  "clips": [
+    {
+      "id": "arrival",
+      "text": "我来了。手边的事，慢慢做。",
+      "expression": "smile",
+      "file": "arrival.wav",
+      "duration": 3.62,
+      "sha256": "7f38b666882d3da2222c96698f3516a1146fa09ce5a6acd96322c15c138be8b0"
+    },
+    {
+      "id": "morning",
+      "text": "早上好。今日也陪你一程。",
+      "expression": "smile",
+      "file": "morning.wav",
+      "duration": 3.9,
+      "sha256": "8d762a56478c7dd18d9128f6a49d1139477b0247275b1f214f0042eeff8613a1"
+    },
+    {
+      "id": "evening",
+      "text": "晚上好。忙了一天，先歇一歇吧。",
+      "expression": "comfort",
+      "file": "evening.wav",
+      "duration": 4.56,
+      "sha256": "cca4cc7d47d056b0e05a43321f69d97ea481cb974c680274a3fc0ff38f07140e"
+    },
+    {
+      "id": "night",
+      "text": "晚安。剩下的事，留给明日也无妨。",
+      "expression": "sleepy",
+      "file": "night.wav",
+      "duration": 4.96,
+      "sha256": "07eccb1d66f74c16ec9ff79b1090f39bb4cf6a40385b7a77108083ceb0a79874"
+    },
+    {
+      "id": "return",
+      "text": "欢迎回来。我一直在这里。",
+      "expression": "smile",
+      "file": "return.wav",
+      "duration": 3.52,
+      "sha256": "7e2627bf76f6489c021d0b36fc21a3eeb7bed37e2d24cc49fafead0d3e4f5178"
+    },
+    {
+      "id": "wave",
+      "text": "见到你，真好。",
+      "expression": "smile",
+      "file": "wave.wav",
+      "duration": 2.26,
+      "sha256": "3341dc5174959f78f9daa8e4d1e338438cd8a3f15ef59845fa4ea9ad5399c093"
+    },
+    {
+      "id": "touch-legacy",
+      "text": "嗯，我在。慢慢来就好。",
+      "expression": "shy",
+      "file": "touch.wav",
+      "duration": 4.2,
+      "sha256": "50c8a1d8b2a83ec53d6f9930b6d0f4d7692b00f0296313448b8539d564d9f4ac"
+    },
+    {
+      "id": "touch-close",
+      "text": "又是你呀。今日也陪你一程。",
+      "expression": "shy",
+      "file": "touch-close.wav",
+      "duration": 3.44,
+      "sha256": "03dc679000df3dd821860e5b6428dee257b9f5bd3e39b1db1b757137845dba88"
+    },
+    {
+      "id": "tea",
+      "text": "温度刚好，多谢。你也喝一口吧。",
+      "expression": "smile",
+      "file": "tea.wav",
+      "duration": 4,
+      "sha256": "91828f61320da8b7386a169da366cb9ddab14773a1319344c6b6fbbf5f7f1e17"
+    },
+    {
+      "id": "tea-warm",
+      "text": "茶还温着，不必急着再添。",
+      "expression": "smile",
+      "file": "tea-warm.wav",
+      "duration": 4.28,
+      "sha256": "a236367b6f54e77716210f2babffbc961dfe7ada0b4a690369d6c18a281bfc32"
+    },
+    {
+      "id": "rest",
+      "text": "歇一会儿。我就在这里。",
+      "expression": "sleepy",
+      "file": "rest.wav",
+      "duration": 3.28,
+      "sha256": "73ae77a03d8a84d4e0df378693f49eb3476b18d6c56321cc5c00ec4547e07eb4"
+    },
+    {
+      "id": "companion",
+      "text": "好，我陪着你。",
+      "expression": "comfort",
+      "file": "companion.wav",
+      "duration": 2.18,
+      "sha256": "cee22986388e2a7de5c9991be0f1867797f4117f4d58341760f7b05b18700f00"
+    },
+    {
+      "id": "ambient-slow",
+      "text": "有些事，慢慢做反而更稳妥。",
+      "expression": "comfort",
+      "file": "ambient-slow.wav",
+      "duration": 3.78,
+      "sha256": "7bd7df20eabc89eb2473e2d891ee97547368748d0c5bef5a9fe8cd8d4c8cd63e"
+    },
+    {
+      "id": "ambient-page",
+      "text": "这一页，今日写到这里也无妨。",
+      "expression": "comfort",
+      "file": "ambient-page.wav",
+      "duration": 3.78,
+      "sha256": "8af1df654a6927a10780448b7be2f99742b6469710dd36380bc85d61c9e09d29"
+    },
+    {
+      "id": "ambient-water",
+      "text": "记得喝水。别只顾着屏幕。",
+      "expression": "smile",
+      "file": "ambient-water.wav",
+      "duration": 3.84,
+      "sha256": "f52b9f4bba1dd4218d4aef0b11a3fd51a4970e3bc5789a70c12d9a24ae956b75"
+    },
+    {
+      "id": "ambient-light",
+      "text": "窗外的光又变了。要不要歇一歇？",
+      "expression": "smile",
+      "file": "ambient-light.wav",
+      "duration": 4.32,
+      "sha256": "9fe5a2290981ddbca99c0b496adb8afd6a1dfad8cedaa050c64eea6128fd0118"
+    },
+    {
+      "id": "ambient-company",
+      "text": "我在这里，陪你把手边的事做好。",
+      "expression": "comfort",
+      "file": "ambient-company.wav",
+      "duration": 4.24,
+      "sha256": "e24ed8f6900d30ef4b2d6ac6d3144afe27f093b10f954325469f8ac25c2ff2e7"
+    },
+    {
+      "id": "touch",
+      "text": "轻一点。",
+      "expression": "shy",
+      "file": "touch-light.wav",
+      "duration": 1.22,
+      "sha256": "7d6ec51f91874296c894878346c8a901169afa898cbd8bb0b4bf5c01edb13036"
+    },
+    {
+      "id": "head-again",
+      "text": "又摸到我的头了。",
+      "expression": "smile",
+      "file": "head-again.wav",
+      "duration": 1.66,
+      "sha256": "187e0aad98878c6e38be9d2f3a62159b5f5c8bf3aca1d376c9fce140b449ef6a"
+    },
+    {
+      "id": "head-mess",
+      "text": "头发都要被你揉乱啦。",
+      "expression": "puzzled",
+      "file": "head-mess.wav",
+      "duration": 2.06,
+      "sha256": "235e59041b7a5ecda95be1e4df0a926b5c33c46072734913463f627fb2d0ab8b"
+    },
+    {
+      "id": "face-first",
+      "text": "嗯？脸上有什么吗？",
+      "expression": "puzzled",
+      "file": "face-first.wav",
+      "duration": 2.74,
+      "sha256": "dba1531683115f1005e0822265e9f58f760dd40d40a849348bb787a1357f5d86"
+    },
+    {
+      "id": "face-again",
+      "text": "别一直戳啦……",
+      "expression": "shy",
+      "file": "face-again.wav",
+      "duration": 1.42,
+      "sha256": "2e98ad38b2b8fa22be3c9adfac9a2beb53502a323e85b5ec4355a8f717a4f43a"
+    },
+    {
+      "id": "face-play",
+      "text": "好啦，我知道你在逗我。",
+      "expression": "laugh",
+      "file": "face-play.wav",
+      "duration": 2.5,
+      "sha256": "4be18989984edbc96c2e374f73b99810b2d6f56defe91cafdaa9a96d499764e0"
+    },
+    {
+      "id": "tail-first",
+      "text": "嗯？是你碰了我的尾巴？",
+      "expression": "puzzled",
+      "file": "tail-first.wav",
+      "duration": 2.34,
+      "sha256": "5846a7639064579f8995450614678399fcb0f735431dbb60af021850a05df709"
+    },
+    {
+      "id": "tail-again",
+      "text": "尾巴也会怕痒的。",
+      "expression": "shy",
+      "file": "tail-again.wav",
+      "duration": 1.86,
+      "sha256": "c7159e86c33edeb4554a074b2959061e4f65c3bcffeb5985909ccfe00abadb63"
+    },
+    {
+      "id": "tail-play",
+      "text": "被我发现啦，别再偷碰了。",
+      "expression": "laugh",
+      "file": "tail-play.wav",
+      "duration": 2.68,
+      "sha256": "3b2880ee6a1fea9be3e76ab1fb9f71376773eb30c6d9718916a823c6e6795150"
+    },
+    {
+      "id": "body-first",
+      "text": "我在这里。",
+      "expression": "smile",
+      "file": "body-first.wav",
+      "duration": 1.38,
+      "sha256": "16f952fc2e7b8a7cfa8782a3b8cb88228e383185a01750cc2c18ce599be053a7"
+    },
+    {
+      "id": "body-again",
+      "text": "怎么啦？有事叫我就好。",
+      "expression": "puzzled",
+      "file": "body-again.wav",
+      "duration": 2.42,
+      "sha256": "41a75fe9bfbc614a07b0f2d1cbab34a10de542fe7a11cd214640706b5a1bb610"
+    },
+    {
+      "id": "body-play",
+      "text": "好啦，我看见你了。",
+      "expression": "laugh",
+      "file": "body-play.wav",
+      "duration": 2.14,
+      "sha256": "0f6f6e23cfb2d2223f6b1035c08e34ccff56a883b951f0eb6c6c5a4faad0417c"
+    },
+    {
+      "id": "talk-note",
+      "text": "有些事，记下来，便不容易忘。",
+      "expression": "serious",
+      "file": "talk-note.wav",
+      "duration": 2.48,
+      "sha256": "bffec2452876d6890e9204026d6b9bd199678f6f15ebeb3810e8bf8e6d2537fd"
+    },
+    {
+      "id": "talk-tired",
+      "text": "若是今日很累，便把这一页留给明日。",
+      "expression": "comfort",
+      "file": "talk-tired.wav",
+      "duration": 2.96,
+      "sha256": "a50a506afeca38bb96920036c236bcecbec7a73eaee368e5f8ecb0c9e6e0d00b"
+    },
+    {
+      "id": "talk-steady",
+      "text": "不必每一步都走得快。走稳些，也很好。",
+      "expression": "comfort",
+      "file": "talk-steady.wav",
+      "duration": 4.24,
+      "sha256": "8654c568c524c6a7b834f48f3ad68604ce5c0cb9282bf327544c1a4c06980792"
+    },
+    {
+      "id": "talk-company",
+      "text": "我喜欢这样的片刻：一卷书，一盏茶，还有你。",
+      "expression": "smile",
+      "file": "talk-company.wav",
+      "duration": 3.72,
+      "sha256": "05bed610381225d9ab5e35a7997a0e82c3971ba44a72d23ee6832d288a744c2d"
+    },
+    {
+      "id": "jump",
+      "text": "偶尔活动一下，也很好。",
+      "expression": "smile",
+      "file": "jump.wav",
+      "duration": 1.86,
+      "sha256": "529557464ec8074368ce28c1242cb6b6339a73b918ef102991b0f7a3a83b013f"
+    },
+    {
+      "id": "read",
+      "text": "这一卷还未读完。你也忙你的吧。",
+      "expression": "serious",
+      "file": "read.wav",
+      "duration": 3.68,
+      "sha256": "dad2c4236d90252e5aa833d1698448d7af7e4f9265216fb2a163455540ebd3bc"
+    },
+    {
+      "id": "focus-start",
+      "text": "不急，一件一件做。我陪你把这一段时间过好。",
+      "expression": "serious",
+      "file": "focus-start.wav",
+      "duration": 3.28,
+      "sha256": "e3cc4490d827ff6cb58bbc9e1baaed03b8933e37a97befea789bba1b25a1fca8"
+    },
+    {
+      "id": "focus-stop",
+      "text": "辛苦了，先把肩膀放松些。",
+      "expression": "relief",
+      "file": "focus-stop.wav",
+      "duration": 2.9,
+      "sha256": "7f3822f85e96fc2b598c52fa73ec2c698e34fed627ee671c05bb10cf3f7bcf2e"
+    },
+    {
+      "id": "focus-done",
+      "text": "这一段已经完成。喝点水，望一眼窗外吧。",
+      "expression": "relief",
+      "file": "focus-done.wav",
+      "duration": 5.92,
+      "sha256": "625e12cdeb1620df9ef6d02cd4dad2a852165bb5f9009d39e92b35560185b086"
+    },
+    {
+      "id": "drink-reminder",
+      "text": "茶还温着。记得喝点水。",
+      "expression": "smile",
+      "file": "drink-reminder.wav",
+      "duration": 2.72,
+      "sha256": "dc5bdca7931d38893053cc1d310460a1701e259ec64986ef536c6b8140b55da1"
+    },
+    {
+      "id": "rest-reminder",
+      "text": "先歇一歇吧。看看远处，松一松肩膀。",
+      "expression": "comfort",
+      "file": "rest-reminder.wav",
+      "duration": 4.22,
+      "sha256": "af1bd0245e667a97d669dce0f7318ad410e02961cbfb292eb528e853abedf413"
+    },
+    {
+      "id": "todo-done",
+      "text": "又写好了一笔。辛苦了。",
+      "expression": "smile",
+      "file": "todo-done.wav",
+      "duration": 1.14,
+      "sha256": "15b286cb314233a9c6e5937e9d8a0fe8c599920524510eee5a477edc972359df"
+    },
+    {
+      "id": "custom-reminder",
+      "text": "提醒时间到了，看看我写下的内容吧。",
+      "expression": "serious",
+      "file": "custom-reminder.wav",
+      "duration": 3.48,
+      "sha256": "e0dc7fe594038a409092ad57a9e5d576304fd538c4234b496f2a22eb3f8d1ae7"
+    },
+    {
+      "id": "action-note",
+      "text": "我记在便签上了。",
+      "expression": "smile",
+      "file": "action-note.wav",
+      "duration": 1.78,
+      "sha256": "0d47d9997993ad2c2e4a7ea33a665dc11a2eedaf3e10266e6cb6dd0b7696a6e7"
+    },
+    {
+      "id": "action-todo",
+      "text": "已经添进待办了。",
+      "expression": "smile",
+      "file": "action-todo.wav",
+      "duration": 1.74,
+      "sha256": "d6610a560901ed30538f7bc25887f46ab2f0f1bcae25a5e712cff037691a29d6"
+    },
+    {
+      "id": "action-reminder",
+      "text": "提醒已经安排好了。",
+      "expression": "smile",
+      "file": "action-reminder.wav",
+      "duration": 2.42,
+      "sha256": "aa0c0e6ee66bda37a48c2ba25cb34f2ffdb149fbef327fef8c2077765f3c2d28"
+    },
+    {
+      "id": "action-link",
+      "text": "已打开快捷入口。",
+      "expression": "smile",
+      "file": "action-link.wav",
+      "duration": 1.94,
+      "sha256": "477d4e66a9650da301312c40320fa7dd34ebb92cba544a47b53a07d5c3c60364"
+    },
+    {
+      "id": "action-done",
+      "text": "已经办好了，具体内容在这里。",
+      "expression": "smile",
+      "file": "action-done.wav",
+      "duration": 3.08,
+      "sha256": "f24a7de9a54c9abeab0c154c24e24a4ff4e5ba0da8cdfe984a371d2e47d0690e"
+    }
+  ],
+  "updated": "2026-10-02T19:37:03.401Z"
+}
