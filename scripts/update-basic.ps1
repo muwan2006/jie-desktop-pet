@@ -56,8 +56,18 @@ try {
    if((TaskDigest $taskTarget) -ne $taskFile.Value.sha256){throw ('更新后校验失败：'+$taskFile.Name)}
   }
  }catch{
-  for($taskI=$taskDone.Count-1;$taskI -ge 0;$taskI--){$taskItem=$taskDone[$taskI];if($taskItem.existed){Copy-Item -LiteralPath $taskItem.saved -Destination $taskItem.target -Force}else{Remove-Item -LiteralPath $taskItem.target -Force -ErrorAction SilentlyContinue}}
-  throw
+  $taskOriginalError=$_.Exception.Message
+  $taskRollbackErrors=New-Object System.Collections.Generic.List[string]
+  for($taskI=$taskDone.Count-1;$taskI -ge 0;$taskI--){
+   $taskItem=$taskDone[$taskI]
+   try{
+    if($taskItem.existed){
+     if(-not(Test-Path -LiteralPath $taskItem.target) -or (TaskDigest $taskItem.target) -ne (TaskDigest $taskItem.saved)){Copy-Item -LiteralPath $taskItem.saved -Destination $taskItem.target -Force}
+    }elseif(Test-Path -LiteralPath $taskItem.target){Remove-Item -LiteralPath $taskItem.target -Force}
+   }catch{$taskRollbackErrors.Add($taskItem.target)}
+  }
+  if($taskRollbackErrors.Count){throw ($taskOriginalError+'；部分文件无法恢复，请保留备份：'+$taskBackup)}
+  throw ($taskOriginalError+'；已恢复更新前的程序文件。')
  }
  Write-Host '已更新到 1.0.1。请打开原来的 Jie.exe，在功能中心点击“继续上次安装”。'
  Write-Host ('原文件备份：'+$taskBackup)
