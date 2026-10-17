@@ -27,6 +27,7 @@ def main():
     p.add_argument('--electron-dir', type=Path)
     p.add_argument('--dependencies', type=Path)
     p.add_argument('--local-runtime', required=True, type=Path)
+    p.add_argument('--wake-model', type=Path, help='Verified upstream KWS ONNX files for the speech component.')
     p.add_argument('--signing-key', required=True, type=Path)
     p.add_argument('--out', required=True, type=Path)
     p.add_argument('--catalog-only', action='store_true')
@@ -48,6 +49,14 @@ def main():
         print('Building', id, flush=True)
         base = packs/id/'files'
         files = {f.relative_to(base).as_posix(): f for f in base.rglob('*') if f.is_file()}
+        if id == 'speech':
+            if not a.wake_model: p.error('--wake-model is required for building speech; the basic-only build reuses its signed catalog.')
+            provenance = json.loads((app/'wake-model/SOURCE.json').read_text(encoding='utf-8'))
+            for name in ('encoder.onnx', 'decoder.onnx', 'joiner.onnx'):
+                model = a.wake_model.resolve()/name
+                if not model.is_file() or digest(model) != provenance['files'][name]['sha256']:
+                    p.error('Missing or altered official wake model: '+name)
+                files['wake-model/'+name] = model
         if id == 'local-runtime':
             runtime = a.local_runtime.resolve()
             if not (runtime/'python.exe').is_file() or not (runtime/'model/LICENSE.txt').is_file():

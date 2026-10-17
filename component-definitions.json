@@ -496,14 +496,14 @@
   },
   "speech": {
     "name": "语音输入与通话",
-    "description": "本地识别、叫名字唤醒、按键说话和持续语音聊天。",
+    "description": "本地识别、完整名字唤醒模型、按键说话与持续通话。",
     "dependencies": [
       "voice",
       "local-runtime"
     ],
     "files": [],
     "assets": [],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "entryFiles": []
   },
   "local-runtime": {

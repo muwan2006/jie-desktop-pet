@@ -1,0 +1,7 @@
+sherpa-onnx-kws-zipformer-zh-en-3M-2025-12-20
+Upstream model by pkufool / k2-fsa; ONNX files unchanged.
+Model: https://modelscope.cn/models/pkufool/icefall-kws-zipformer-zh-en-3M-2025-12-20
+Publisher clarification: https://github.com/k2-fsa/sherpa-onnx/issues/3802
+The publisher stated on 2026-10-08 that the ModelScope model license was updated to Apache 2.0.
+Model source and integrity hashes: app/wake-model/SOURCE.json in the base edition.
+The original archive members are renamed to encoder.onnx, decoder.onnx, joiner.onnx; weights are unmodified.
