@@ -8,7 +8,12 @@ import threading
 import time
 from collections import deque
 from pathlib import Path
-from speech_audio import choose_device, MusicDucking
+
+# Resolve our helper explicitly under embedded Python's isolated module path.
+_audio_spec = importlib.util.spec_from_file_location('jie_speech_audio', Path(__file__).with_name('speech_audio.py'))
+_audio = importlib.util.module_from_spec(_audio_spec)
+_audio_spec.loader.exec_module(_audio)
+choose_device, MusicDucking = _audio.choose_device, _audio.MusicDucking
 
 sys.stdout.reconfigure(encoding='utf-8')
 sys.stdin.reconfigure(encoding='utf-8')

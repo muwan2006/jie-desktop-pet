@@ -7,8 +7,14 @@ import sys
 import threading
 import time
 import wave
-from speech_audio import choose_device, MusicDucking
+import importlib.util
 from pathlib import Path
+
+# Embedded Python uses an isolated _pth and does not add this script's directory.
+_audio_spec = importlib.util.spec_from_file_location('jie_speech_audio', Path(__file__).with_name('speech_audio.py'))
+_audio = importlib.util.module_from_spec(_audio_spec)
+_audio_spec.loader.exec_module(_audio)
+choose_device, MusicDucking = _audio.choose_device, _audio.MusicDucking
 
 sys.stdout.reconfigure(encoding='utf-8')
 sys.stdin.reconfigure(encoding='utf-8')
