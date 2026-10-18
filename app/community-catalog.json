@@ -118,18 +118,18 @@
         "dependencies": [
           "pet-expressions"
         ],
-        "version": "1.0.0",
+        "version": "1.0.1",
         "id": "qq",
-        "asset": "jie-qq-1.0.0.zip",
-        "bytes": 26310,
-        "sha256": "41d35743518b36df400254a29d5ab43469540314eea13b0316c23dc7cfd254b0",
+        "asset": "jie-qq-1.0.1.zip",
+        "bytes": 26350,
+        "sha256": "b150d77ee808db4ffae35263d884602f1e76e111b61d16c1b5294b7ec5f6815d",
         "files": {
-          "community-features/qq.json": "a779e21b2fec2f2e903a561bd4dbd9dc77e9dc0c6142c845e2c2c734baccb5c5",
+          "community-features/qq.json": "7a098aef8bf4abbc10a307a4df552c2a9b58c3aa7589beaadc136a9fc17e61bb",
           "qq-continuity-ui.js": "91fbc38c1eaa0dee7b87a8bee4871fb43d804dffeb2c00cadd0a34a16b98d3eb",
           "qq-page.css": "ed102ef202d12cbdd627ab130391b31015d26f83a60b669951a878aa0d187856",
           "qq-page.js": "e0a9bee79b96ee2ed5fd212c24d28775245a9653b8405017f9ce33a9178fd242",
           "qq-polish-ui.js": "dddb920f6d57e35b3986d0b9f04a431299b3c9d66dff2670766f6874d7bc6d50",
-          "qq-ui.js": "e63fcf54eac896f4d5638e5320d0d0cd34c94c6afcb44e71f880f572b28a1c06",
+          "qq-ui.js": "846ddb11df980d2ae0a4dcf04d6a12167f9632a2e15d38a6c367f6cb0b8fa8e4",
           "qq-workshop-ui.js": "c810a6424e890b2e5ad8d3e8e3057268e6ec8893857f8ea2f85fe507a58016f0"
         }
       },
@@ -139,20 +139,20 @@
         "dependencies": [
           "pet-expressions"
         ],
-        "version": "1.0.0",
+        "version": "1.0.1",
         "id": "games",
-        "asset": "jie-games-1.0.0.zip",
-        "bytes": 2615137,
-        "sha256": "48e060eadb464e269769801e0c1675289ea72b8710f556b6eae7f17e4311dbb6",
+        "asset": "jie-games-1.0.1.zip",
+        "bytes": 2615246,
+        "sha256": "8d42813a9969744038ba9342aa09d96466c645bb5def581ab31cbdf1725c36f2",
         "files": {
           "assets/ambient/CREDITS.txt": "4decc71a180fa891f9d7d24f8914093339455bd78930d12fe2e70b176e197e81",
           "assets/ambient/SOURCES.json": "0dc3f9bf27688d30c8ea010224d2f7342329f60975add903b82cba75eedee150",
           "assets/ambient/pages.ogg": "350edd03bcf3ef627d7c58ad6405c5a97830c4f2b3161726d08566ccf09891e7",
           "assets/ambient/rain.ogg": "0162d6760584c7f973fe9ecbd28442a598623fd096e21278581a35c771669aa8",
           "assets/ambient/wind.ogg": "87f81163601ab3b3b7fe29d6421e8c61a7f511c86e09aab48b3e24cb996f1a30",
-          "atelier-ui.js": "76bbfbd913288f558bd03f41b35c42b00d6ffd722c2880ae558f9e4bcd6388e9",
+          "atelier-ui.js": "50276ff84d43c92461c11072fc5251351d1385eca7f16dec6ba5f5b26ae875f3",
           "atelier.css": "5245711b3c767ee83bf97046501886ee0fd98bca7e363b10e0f665decea45bc6",
-          "community-features/games.json": "b4b094dbcd4a4ab9272a4774cd4f20b61f0d294afa985d36db26c8a0fb25aee1"
+          "community-features/games.json": "b2b195777441cc94e5b2178afeb490854251b80bd38eac7f8a22eed54be73c2e"
         }
       },
       {
@@ -2989,5 +2989,5 @@
       }
     ]
   },
-  "signature": "fXAeRED43bB0vYewoAtSgaxlW0+Dzj2Jqa0JPrEG0f3vcEOXaTC2V2l7G5ZVuRtooemWPY+EL8JfnoL/m89VAg=="
+  "signature": "jJBM8eRDK9xmII7rUqB3xdo/eapYxjXwSg5zsQwPUIyOcQClJl8La2rSNQplnTj/Z5WpZYajgTQH37DBV63fAw=="
 }

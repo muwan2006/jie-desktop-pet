@@ -127,7 +127,7 @@
       "qq-page.css"
     ],
     "assets": [],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "entryFiles": [
       "qq-continuity-ui.js",
       "qq-page.css",
@@ -150,7 +150,7 @@
     "assets": [
       "ambient"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "entryFiles": [
       "assets/ambient/CREDITS.txt",
       "assets/ambient/SOURCES.json",
