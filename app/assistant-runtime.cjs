@@ -59,6 +59,7 @@ class AssistantRuntime{
   const cancel=/^(?:取消|算了|不用了|不对|停止)[。！!]*$/u.test(text),yes=/^(?:确认|是|是的|对|对的|没错|可以|执行|就这样)[。！!]*$/u.test(text);
   const pending=this.pendingVoice;if(pending&&!this.tasks.same(pending.owner))this.pendingVoice=null;
   if(cancel){this.pendingVoice=null;this.tasks.cancel();this.respond('好，这次先不做。');return {canceled:true};}
+  if(result.confidence>=.45&&require('./media-control.cjs').intent(text)){const local=await this.h.companionRoute?.(text,true);if(local)return {...local,companionHandled:true};}
   if(result.confidence<.72){this.pendingVoice={text,owner};this.respond('我听到的是：'+text+'。对吗？再按快捷键说“确认”，或重新说一遍。');return {review:true};}
   if(yes&&this.pendingVoice){const original=this.pendingVoice.text;this.pendingVoice=null;return this.voiceResult(await this.propose(original,{source:'voice',confidence:1}));}
   this.pendingVoice=null;const plan=this.tasks.current;

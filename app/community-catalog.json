@@ -7,11 +7,11 @@
         "name": "声音与朗读",
         "description": "系统语音、语音API、预设问候与聊天朗读。",
         "dependencies": [],
-        "version": "1.0.0",
+        "version": "1.0.1",
         "id": "voice",
-        "asset": "jie-voice-1.0.0.zip",
-        "bytes": 7360529,
-        "sha256": "2552d0d71c35c3a17a211b2864d2bacdf6300ac352ebfa3ad30eb0d5492e8951",
+        "asset": "jie-voice-1.0.1.zip",
+        "bytes": 7360643,
+        "sha256": "b96c7d932f26739a22faa00116d81535f6f8648f842102457848bedbca147c31",
         "files": {
           "assets/voice/jie-reference-alt.wav": "4ae7dd183f49732e349ccc6a79a7593630ff5f385707e4210a06decb639539fa",
           "assets/voice/jie-reference.wav": "48d0bb5e360cf73f3362a7bb28ad76797d346b50ff8c8fde6cc8794e0cca8bd2",
@@ -73,9 +73,9 @@
           "assets/voice/presets/touch.wav": "50c8a1d8b2a83ec53d6f9930b6d0f4d7692b00f0296313448b8539d564d9f4ac",
           "assets/voice/presets/wave.wav": "3341dc5174959f78f9daa8e4d1e338438cd8a3f15ef59845fa4ea9ad5399c093",
           "assets/voice/reference-notes.txt": "a02332b3677cc001432ff2b62fe9f99b8a55bece224a22490c7ea9894cc1f392",
-          "community-features/voice.json": "b95729cf08695a247278736c577a6210f598c8f3b5bdfa7a25468053b87971ae",
+          "community-features/voice.json": "f0153a71780309f6d18fdc67a64a59d9a768f904f9dbfe0871894589bc46f690",
           "pet-assistant.js": "cb82addd6242b8b6cef8aecb8debf380bcd60273303a106e8409739a7edb9ccb",
-          "speech-ui.js": "8ff6874a3c46d87fc664c9185998e054cdead6b1ca874a30f283b3bd63e5bb36",
+          "speech-ui.js": "352c43aa1f8940ea8fc80bdd0462e717288fe0270ee69b83ece162a72d66f049",
           "voice-call-ui.js": "1df0566c47cb7203264734daabd64a944de5e2ec8bebc8d13429022dd56873f7",
           "voice-player.js": "51d531e0d319f8ac67d4ad4b600108d1a4ad5973fd8bd4b741c7a6661920dd5a",
           "voice-ui.js": "e2cfb59c5d065e8c36a12ba47b04dbcaf4b325dc8a5621570cd204f967230fc3"
@@ -449,19 +449,19 @@
         "name": "记录与效率",
         "description": "每日小记、项目、便签提醒、软件通知、角色包、插件和备份搬家。",
         "dependencies": [],
-        "version": "1.0.0",
+        "version": "1.0.1",
         "id": "productivity",
-        "asset": "jie-productivity-1.0.0.zip",
-        "bytes": 17258,
-        "sha256": "6e3e3806a0f2cb7ad344547825a258836fa7c1bdddaf69542464e05b149c149f",
+        "asset": "jie-productivity-1.0.1.zip",
+        "bytes": 17463,
+        "sha256": "2ee158c25d2181e246ad9d4a0f63c582c8d2c6a8e0d381db51a19cd8f33a5bc9",
         "files": {
-          "community-features/productivity.json": "ca7e71b3475fc54d3f851361836a4dda36a84ac8fdc71e34dc90439927873d40",
+          "community-features/productivity.json": "9d254ef1153872dc39def8165449ee27f452a86b9d51a905ddbfc1cef11d5822",
           "diary-ui.css": "aa66ab602120dc7071dd13da040a4d6f42f56eee5083fe4c0c7188c10dd672bc",
           "diary-ui.js": "a01b757c82dbf77c5b3ca2edf319e3310dedd8df059c9f6b5bfeb4a5687d2e16",
           "extensions-ui.css": "6e5a7f1a0664ef2d37d66f453b3cf00088ef7253b4242cf209704b187e590794",
           "extensions-ui.js": "4e1ad26de73c6c7508e236984945e8872f860ef0e49fe91ab5a76931a1668c77",
           "software-ui.css": "ad55ae380420ee7b5e8eecf298f069d044fbfb745d0c3d99eefd6805e2359748",
-          "software-ui.js": "25a85e2107733b80ccb3e6822c9ae6b49416f1206204f080dd2fce06586c0d0a",
+          "software-ui.js": "b7521d04a41d43f2ad6d3a68720e4b38a45c40d264e2b65dc11069251908b8a7",
           "utility-ui.css": "6af0d68e31776e93b11b89b55252d02233cdddcc1f3c3937b532c8e4eadd39e8",
           "utility-ui.js": "f0f9d73863d2ba13c6c2a0cccf4de481bd66ef804c2ee508461bff8d05984216"
         }
@@ -2989,5 +2989,5 @@
       }
     ]
   },
-  "signature": "OUr0trtAad4OBO3QMMilucKpDGPoOreFSmjYHWVxGeCTZNNetLXlPb2OQ6k6sjRL9hEqZKiy6HP0U/VDhN+fAw=="
+  "signature": "fXAeRED43bB0vYewoAtSgaxlW0+Dzj2Jqa0JPrEG0f3vcEOXaTC2V2l7G5ZVuRtooemWPY+EL8JfnoL/m89VAg=="
 }

@@ -8,6 +8,7 @@ import threading
 import time
 from collections import deque
 from pathlib import Path
+from speech_audio import choose_device, MusicDucking
 
 sys.stdout.reconfigure(encoding='utf-8')
 sys.stdin.reconfigure(encoding='utf-8')
@@ -44,11 +45,7 @@ def main():
     if config.get('language') not in ('zh-CN', 'en-US', 'ja-JP'):
         raise ValueError('识别语言无效。')
     available = speech.devices(sd)
-    chosen = next((d for d in available if d['id'] == config.get('device')), None)
-    if not config.get('device'):
-        usb = [d for d in available if d['host'] == 'Windows WASAPI' and 'USB' in d['name'].upper()]
-        if len(usb) == 1:
-            chosen = usb[0]
+    chosen = choose_device(available, config.get('device', ''))
     if config.get('device') and chosen is None:
         raise RuntimeError('选中的麦克风已断开，请重新选择收音设备。')
     index = chosen['index'] if chosen else None
@@ -88,78 +85,81 @@ def main():
                 emit('test_turn', seconds=time.monotonic()-started, file=Path(filename).name)
         emit('done')
         return
-    vad = get_vad_model()
-    listen = True
-    while True:
-        if not listen:
-            command = commands.get()
-            if command == 'listen':
-                listen = True
-            elif command == 'pause':
-                emit('paused')
-                continue
-            else:
-                emit('canceled')
-                return
-        blocks = queue.Queue(maxsize=30)
-        def on_audio(indata, frames, timing, status):
-            try:
-                blocks.put_nowait(indata[:, 0].copy())
-            except queue.Full:
-                pass
-        pre = deque(maxlen=5)
-        vad_window = deque(maxlen=8)
-        parts = []
-        endpoint = Endpoint()
-        last_meter = 0
-        paused = False
-        with sd.InputStream(device=index, samplerate=rate, channels=1, dtype='float32',
-                            blocksize=int(rate / 10), callback=on_audio):
-            emit('ready', engine='local', device=info['name'])
-            while True:
-                try:
-                    command = commands.get_nowait()
-                    if command == 'listen':
-                        continue
-                    if command == 'pause':
-                        paused = True
-                        break
+    with MusicDucking(config, emit) as music_duck:
+        vad = get_vad_model()
+        listen = True
+        while True:
+            if not listen:
+                command = commands.get()
+                if command == 'listen':
+                    listen = True
+                elif command == 'pause':
+                    emit('paused')
+                    continue
+                else:
                     emit('canceled')
                     return
-                except queue.Empty:
-                    pass
+            blocks = queue.Queue(maxsize=30)
+            def on_audio(indata, frames, timing, status):
                 try:
-                    block = blocks.get(timeout=.1)
-                except queue.Empty:
-                    continue
-                now = time.monotonic()
-                rms = float(np.sqrt(np.mean(block ** 2)))
-                pre.append(block)
-                vad_window.append(block)
-                raw = np.concatenate(vad_window)
-                sampled = np.interp(np.arange(0, len(raw), rate / 16000),
-                                    np.arange(len(raw)), raw).astype('float32')
-                padding = (-len(sampled)) % 512
-                probability = float(np.mean(vad(np.pad(sampled, (0, padding)))[-3:])) if rms > .0004 else 0
-                began, ended = endpoint.update(probability, now)
-                if began:
-                    parts.extend(pre)
-                    emit('speech', at=int(time.time() * 1000))
-                elif endpoint.started:
-                    parts.append(block)
-                if now - last_meter > .25:
-                    last_meter = now
-                    emit('level', level=min(100, int(rms * 1500)), speaking=endpoint.started)
-                if ended or endpoint.started and sum(len(p) for p in parts) / rate >= 30:
-                    break
-        listen = False
-        if paused:
-            emit('paused')
-            continue
-        ended_at = int(time.time() * 1000 - max(0, time.monotonic() - endpoint.last) * 1000)
-        emit('utterance', at=ended_at)
-        transcribe(np.concatenate(parts), rate)
-        emit('turn_done', at=ended_at)
+                    blocks.put_nowait(indata[:, 0].copy())
+                except queue.Full:
+                    pass
+            pre = deque(maxlen=5)
+            vad_window = deque(maxlen=8)
+            parts = []
+            endpoint = Endpoint()
+            last_meter = 0
+            paused = False
+            music_duck.lower()
+            with sd.InputStream(device=index, samplerate=rate, channels=1, dtype='float32',
+                                blocksize=int(rate / 10), callback=on_audio):
+                emit('ready', engine='local', device=info['name'])
+                while True:
+                    try:
+                        command = commands.get_nowait()
+                        if command == 'listen':
+                            continue
+                        if command == 'pause':
+                            paused = True
+                            break
+                        emit('canceled')
+                        return
+                    except queue.Empty:
+                        pass
+                    try:
+                        block = blocks.get(timeout=.1)
+                    except queue.Empty:
+                        continue
+                    now = time.monotonic()
+                    rms = float(np.sqrt(np.mean(block ** 2)))
+                    pre.append(block)
+                    vad_window.append(block)
+                    raw = np.concatenate(vad_window)
+                    sampled = np.interp(np.arange(0, len(raw), rate / 16000),
+                                        np.arange(len(raw)), raw).astype('float32')
+                    padding = (-len(sampled)) % 512
+                    probability = float(np.mean(vad(np.pad(sampled, (0, padding)))[-3:])) if rms > .0004 else 0
+                    began, ended = endpoint.update(probability, now)
+                    if began:
+                        parts.extend(pre)
+                        emit('speech', at=int(time.time() * 1000))
+                    elif endpoint.started:
+                        parts.append(block)
+                    if now - last_meter > .25:
+                        last_meter = now
+                        emit('level', level=min(100, int(rms * 1500)), speaking=endpoint.started)
+                    if ended or endpoint.started and sum(len(p) for p in parts) / rate >= 30:
+                        break
+            music_duck.restore()
+            listen = False
+            if paused:
+                emit('paused')
+                continue
+            ended_at = int(time.time() * 1000 - max(0, time.monotonic() - endpoint.last) * 1000)
+            emit('utterance', at=ended_at)
+            transcribe(np.concatenate(parts), rate)
+            emit('turn_done', at=ended_at)
 
 if __name__ == '__main__':
     try:

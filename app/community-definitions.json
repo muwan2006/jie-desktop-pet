@@ -13,7 +13,7 @@
     "assets": [
       "voice"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "entryFiles": [
       "assets/voice/jie-reference-alt.wav",
       "assets/voice/jie-reference.wav",
@@ -482,7 +482,7 @@
       "software-ui.css"
     ],
     "assets": [],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "entryFiles": [
       "diary-ui.css",
       "diary-ui.js",

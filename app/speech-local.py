@@ -7,6 +7,7 @@ import sys
 import threading
 import time
 import wave
+from speech_audio import choose_device, MusicDucking
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding='utf-8')
@@ -59,7 +60,7 @@ def transcribe(audio, sample_rate, config, runtime, model=None, fast=False):
     language = {'zh-CN': 'zh', 'en-US': 'en', 'ja-JP': 'ja'}[config['language']]
     segments, _ = model.transcribe(samples, language=language, beam_size=1 if fast else 5,
         vad_filter=True, vad_parameters=dict(min_silence_duration_ms=500, speech_pad_ms=250),
-        initial_prompt=('中文普通话。Edge 浏览器，谷歌浏览器，微软，打开，即梦，哔哩哔哩，B站，颉，豆包。'+ '，'.join(str(w)[:40] for w in config.get('words', [])[:100]))[:1200]
+        initial_prompt=('中文普通话。Edge 浏览器，谷歌浏览器，微软，打开，即梦，哔哩哔哩，B站，颉，豆包，网易云音乐，下一首，上一首，暂停音乐，继续播放，声音小一点，音量调到百分之二十。'+ '，'.join(str(w)[:40] for w in config.get('words', [])[:100]))[:1200]
                        if language == 'zh' else None,
         condition_on_previous_text=False, hallucination_silence_threshold=1.5)
     converter = OpenCC('t2s') if language == 'zh' else None
@@ -101,7 +102,7 @@ def main():
         return
     available = devices(sd)
     device_id = config.get('device', '')
-    chosen = next((d for d in available if d['id'] == device_id), None)
+    chosen = choose_device(available, device_id)
     if device_id and chosen is None:
         raise RuntimeError('选中的麦克风已断开，请刷新收音设备并重新选择。')
     index = chosen['index'] if chosen else None
@@ -136,7 +137,7 @@ def main():
     silence_frames = 0
     endpoint = config.get('endpoint') is True
     noise = .0004
-    with sd.InputStream(device=index, samplerate=rate, channels=1, dtype='float32',
+    with MusicDucking(config, emit), sd.InputStream(device=index, samplerate=rate, channels=1, dtype='float32',
                         blocksize=int(rate/10), callback=on_audio):
         emit('ready', engine='local', device=info['name'])
         while time.monotonic() - started < 60:
