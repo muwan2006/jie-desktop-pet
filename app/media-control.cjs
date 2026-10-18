@@ -2,9 +2,14 @@
 const path=require('node:path'),{execFile}=require('node:child_process');
 const NUM={'零':0,'一':1,'二':2,'两':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9};
 function number(s){if(/^\d{1,3}$/.test(s))return Number(s);if(s==='一百')return 100;const p=s.split('十');if(p.length===2&&p[0].length<=1&&p[1].length<=1)return (p[0]?NUM[p[0]]:1)*10+(p[1]?NUM[p[1]]:0);return NUM[s];}
-function intent(raw){let s=String(raw||'').trim().replace(/[，,。！!？?\s]/g,'').replace(/^(?:颉|小小颉)/,'').replace(/^(?:请你?|帮我|麻烦你)(?:把)?/,'').replace(/(?:一下|吧|就行)$/,'');
+function intent(raw){let s=String(raw||'').trim().replace(/[，,。！!？?\s]/g,'').replace(/^(?:颉|小小颉)/,'').replace(/^(?:请你?|麻烦你?|帮我|替我|给我)(?:帮我|替我|给我)?(?:把)?/,'').replace(/(?:一下|吧|就行|谢谢|好吗)+$/,'');
  let target;if(/系统/.test(s))target='system';else if(/网易云(?:音乐)?/.test(s))target='netease';s=s.replace(/网易云(?:音乐)?/g,'');
  const result=v=>target?{...v,target}:v;
+ if(/^(?:(?:播放|播|放|换|切|切换|跳)(?:到|成)?)?(?:下一(?:首|曲)|后一(?:首|曲))(?:歌曲|音乐|歌|曲)?$/.test(s))return result({action:'next'});
+ if(/^(?:(?:播放|播|放|换|切|切换|跳|回)(?:到|成)?)?(?:上一(?:首|曲)|前一(?:首|曲))(?:歌曲|音乐|歌|曲)?$/.test(s))return result({action:'previous'});
+ if(/^(?:暂停|先暂停|停止)(?:这首|当前)?(?:音乐|歌曲|播放|歌)$/.test(s)||/^(?:把)?(?:音乐|歌曲|播放)(?:先)?暂停$/.test(s))return result({action:/停止/.test(s)?'stop':'pause'});
+ if(/^(?:继续|恢复)(?:这首|当前)?(?:音乐|歌曲|播放|歌)$/.test(s))return result({action:'play'});
+ let relative=s.match(/^(?:调|调整)(高|低|大|小)(?:系统)?(?:音量|声音)(?:一点|些|点)?$/);if(relative)return result({action:'adjust',value:/高|大/.test(relative[1])?10:-10});
  if(/^(?:换|切)(?:一?首|歌|首歌|一首歌|首|一曲)$/.test(s)||/^(?:换|切)(?:到)?下一(?:首|曲)$/.test(s))return result({action:'next'});
  if(/^(?:切|换|回)(?:到)?上一(?:首|曲)$/.test(s))return result({action:'previous'});
  if(/^(?:播放暂停|切换播放状态)$/.test(s))return result({action:'toggle'});
