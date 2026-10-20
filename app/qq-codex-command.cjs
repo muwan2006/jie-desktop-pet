@@ -1,6 +1,7 @@
 'use strict';
+const Artifacts=require('./codex-artifacts.cjs');
 const strip=v=>String(v||'').trim().replace(/^(?:小小颉|小颉|颉)[，,：:\s]*/,'').replace(/[。！!]$/,'').trim();
-function command(text){const t=strip(text);let m;
+function command(text){const t=strip(text),artifact=Artifacts.command(t);if(artifact)return artifact;let m;
  if(/^(?:Codex|codex)?(?:项目列表|查看项目|查看项目列表)$/.test(t))return {type:'projects'};
  if(/^(?:Codex|codex)?(?:任务列表|查看任务列表)$/.test(t))return {type:'list'};
  if((m=t.match(/^(?:查看)?任务(?:进度|状态|结果)(?:[：:\s]*([a-f0-9]{8}))?$/i)))return {type:'status',id:m[1]||''};

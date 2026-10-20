@@ -114,7 +114,7 @@
   },
   "qq": {
     "name": "QQ聊天",
-    "description": "独立账号接入、群聊私聊、收藏与记忆、群内游戏，以及本人QQ接续Codex已有项目聊天。",
+    "description": "独立账号群聊私聊、收藏与记忆、群内游戏、本人QQ接续Codex原聊天和成果文件取件。",
     "dependencies": [
       "pet-expressions"
     ],
@@ -128,7 +128,7 @@
       "qq-codex-ui.js"
     ],
     "assets": [],
-    "version": "1.1.1",
+    "version": "1.2.0",
     "entryFiles": [
       "qq-continuity-ui.js",
       "qq-page.css",

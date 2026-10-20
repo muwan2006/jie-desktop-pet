@@ -64,4 +64,12 @@ async function stop(manager,t){
  if(turn?.id)try{await c.request('turn/interrupt',{threadId:t.threadId,turnId:turn.id},5000);t.stage='已请求原Codex停止，正在确认结果';manager.changed(true);return {ok:true};}catch{}
  throw Error('消息已由Codex桌面接手，无法从此连接确认中断。请在原Codex聊天点击停止；桌宠会继续查询实际结果。');
 }
-module.exports={UUID,discover,bind,begin,poll,stop,findTurn,memberships};
+async function latestResult(manager,project){
+ const c=manager.bridge();await c.connect();const original=(await c.request('thread/read',{threadId:project.nativeThreadId,includeTurns:false})).thread;if(!original||original.id!==project.nativeThreadId)throw Error('原Codex聊天不可用，请重新绑定。');
+ const projectId=original.projectId||memberships(manager.h.codexHome)[original.id]||'',directory=await executionDirectory(manager,original,projectId);if(canonical(directory)!==canonical(project.directory))throw Error('原聊天项目目录已变化，请重新绑定后读取成果。');
+ const turns=(await c.request('thread/turns/list',{threadId:original.id,limit:8,itemsView:'summary',sortDirection:'desc'})).data||[];if(!turns.length)throw Error('原聊天还没有可读取的任务成果。');let fallback;
+ for(const turn of turns.slice(0,8)){const rows=(await c.request('thread/items/list',{threadId:original.id,turnId:turn.id,sortDirection:'desc',limit:60})).data||[],items=rows.map(r=>r.item).filter(Boolean).reverse(),v={turnId:turn.id,status:turn.status,completedAt:turn.completedAt,startedAt:turn.startedAt,result:clean(items.filter(i=>i.type==='agentMessage'&&i.phase!=='commentary').map(i=>i.text).join('\n'),48000),files:items.filter(i=>i.type==='fileChange').flatMap(i=>(i.changes||[]).map(v=>v.path)).filter(v=>typeof v==='string')};
+  fallback??=v;if(!['completed','failed'].includes(v.status)&&!(v.status==='interrupted'&&v.completedAt!=null))return v;const stamp=Number(v.startedAt)||Date.now();if(require('./codex-artifacts.cjs').collect({...v,directory:project.directory,createdAt:stamp<100000000000?stamp*1000:stamp},manager.h.codexHome).length)return v;
+ }return fallback;
+}
+module.exports={UUID,discover,bind,begin,poll,stop,findTurn,memberships,latestResult};

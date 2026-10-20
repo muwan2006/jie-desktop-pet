@@ -79,7 +79,7 @@ def main():
         subprocess.run([node, '-e', "const f=require('fs');require(process.argv[1]).catalog(JSON.parse(f.readFileSync(process.argv[2],'utf8')),f.readFileSync(process.argv[3],'utf8'));", str(app/'community-components.cjs'), str(app/'community-catalog.json'), str(app/'community-public-key.pem')], check=True)
         components = json.loads((app/'community-catalog.json').read_text(encoding='utf-8'))['payload']['components']
     else:
-        payload = {'schema': 1, 'coreVersion': '1.1.1', 'components': components}
+        payload = {'schema': 1, 'coreVersion': '1.2.0', 'components': components}
         unsigned = out/'payload.build.json'
         write(unsigned, payload)
         subprocess.run([node, '-e', "const f=require('fs'),c=require('crypto');const [src,key,dest]=process.argv.slice(1),payload=JSON.parse(f.readFileSync(src,'utf8'));f.writeFileSync(dest,JSON.stringify({payload,signature:c.sign(null,Buffer.from(JSON.stringify(payload)),f.readFileSync(key)).toString('base64')},null,2));", str(unsigned), str(key), str(app/'community-catalog.json')], check=True)
