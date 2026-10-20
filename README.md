@@ -2,13 +2,13 @@
 
 一卷书，一程相伴。一个可互动、可聊天，并按需添加语音、QQ、游戏和屏幕陪伴的 Windows 桌宠。
 
-本项目在 Codex 的帮助下开发。公开基础版从完整版 1.31.0 整理而来，单独编号为 **1.1.1**，使用独立个人资料目录。它不会读取原作者的账号、聊天记录或语音训练资料。
+本项目在 Codex 的帮助下开发。公开基础版从完整版 1.31.0 整理而来，单独编号为 **1.1.2**，使用独立个人资料目录。它不会读取原作者的账号、聊天记录或语音训练资料。
 
-**[下载基础版](https://github.com/muwan2006/jie-desktop-pet/releases/tag/v1.1.1)** · **[完整使用说明](docs/USER_GUIDE.zh-CN.md)** · **[功能包下载](https://github.com/muwan2006/jie-desktop-pet/releases/tag/components-v1)** · **[反馈问题](https://github.com/muwan2006/jie-desktop-pet/issues)**
+**[下载基础版](https://github.com/muwan2006/jie-desktop-pet/releases/tag/v1.1.2)** · **[完整使用说明](docs/USER_GUIDE.zh-CN.md)** · **[功能包下载](https://github.com/muwan2006/jie-desktop-pet/releases/tag/components-v1)** · **[反馈问题](https://github.com/muwan2006/jie-desktop-pet/issues)**
 
 ## 第一次使用
 
-1. 打开上方「下载基础版」，在 Assets 中下载 `Jie-Desktop-Pet-Community-1.1.1-Windows-x64.zip`。`Source code` 是源码，不是可直接运行的软件。
+1. 打开上方「下载基础版」，在 Assets 中下载 `Jie-Desktop-Pet-Community-1.1.2-Windows-x64.zip`。`Source code` 是源码，不是可直接运行的软件。
 2. 用 Windows「全部解压缩」，放到自己有写入权限的文件夹，例如 `D:\Apps\JieCommunity`。不要在压缩包里启动，也不要只拖出一个 exe。
 3. 双击解压后的 `Jie.exe`，出现颉后右键打开面板，进入「聊聊」。想先体验动作，可直接摸头、拖动、递茶或切换形态。
 4. 展开「聊天连接与模型」，配置自己的聊天服务。没有连接也能使用基础桌宠动作；AI 对话需要可用的账号或 API。
