@@ -33,7 +33,7 @@ class CodexBridge extends EventEmitter{
   const r=threadId?await this.request('thread/resume',{...params,threadId,excludeTurns:true}):await this.request('thread/start',{...params,serviceName:'jie_qq_projects'});
   if(!r?.thread?.id)throw Error('Codex 没有返回项目会话。');return r.thread.id;
  }
- async turn(project,threadId,text){return this.request('turn/start',{threadId,cwd:project.directory,input:[{type:'text',text}],approvalPolicy:'on-request',approvalsReviewer:'user',sandboxPolicy:{type:'workspaceWrite',writableRoots:[project.directory],networkAccess:false},...(project.model?{model:project.model}:{})});}
+ async turn(project,threadId,text){return this.request('turn/start',{threadId,cwd:project.directory,input:Array.isArray(text)?text:[{type:'text',text}],approvalPolicy:'on-request',approvalsReviewer:'user',sandboxPolicy:{type:'workspaceWrite',writableRoots:[project.directory],networkAccess:false},...(project.model?{model:project.model}:{})});}
  async interrupt(threadId,turnId){if(!this.ready||!threadId||!turnId)return;await this.request('turn/interrupt',{threadId,turnId},8000);}
  close(){const child=this.child;this.child=null;this.ready=false;try{child?.stdin.end();child?.kill();}catch{}for(const p of this.pending.values()){clearTimeout(p.timer);p.reject(Error('Codex 连接已关闭。'));}this.pending.clear();}
 }

@@ -1,7 +1,7 @@
 {
   "payload": {
     "schema": 1,
-    "coreVersion": "1.2.0",
+    "coreVersion": "1.2.1",
     "components": [
       {
         "name": "声音与朗读",
@@ -118,14 +118,14 @@
         "dependencies": [
           "pet-expressions"
         ],
-        "version": "1.2.0",
+        "version": "1.2.1",
         "id": "qq",
-        "asset": "jie-qq-1.2.0.zip",
-        "bytes": 32412,
-        "sha256": "09300b387e3cf7f12442458fa9e0ee820595300f32724d43afdca5f9568ac9cd",
+        "asset": "jie-qq-1.2.1.zip",
+        "bytes": 32554,
+        "sha256": "70399dae825f4e2ab2bb87b3b703a453d9fd323d7be0ce9ebb5da7a11f4ca9ed",
         "files": {
-          "community-features/qq.json": "6511ba20ccc5ea145e163e74511c54e2cb3cf9a1bacc99be25d8e35c80aa5eaf",
-          "qq-codex-ui.js": "633933aefad88fce354abacd6e88b9d08b52afbde68c0841cacbc0b9ced132b5",
+          "community-features/qq.json": "e3c330ea72afa70b0c3a0537d7b26b9c720fc7ea7f39d39c8407175cd0c0b9b6",
+          "qq-codex-ui.js": "452922448c975611284373acc2da5f334af5fb8f4d4874dfb4f654be0ffdc928",
           "qq-continuity-ui.js": "91fbc38c1eaa0dee7b87a8bee4871fb43d804dffeb2c00cadd0a34a16b98d3eb",
           "qq-page.css": "ed102ef202d12cbdd627ab130391b31015d26f83a60b669951a878aa0d187856",
           "qq-page.js": "d71410c179535fcc7a1faf2c4604d7c0f4931a8c3047c714211a9287fff2b7aa",
@@ -2990,5 +2990,5 @@
       }
     ]
   },
-  "signature": "lmSPxo9VI9GryE2Hqus3VJ0Ao4r/caEtnyLu1wGm8D+vLwpXnc8E8OoaUciU9P+ZNU2WnY3yfNFT2uZSxKOnCg=="
+  "signature": "z/lQZFGSM1FJTSXjtU6jUdVQsCgA2zi4DRl/4fXepggDdhmk7MKvAXAakFIevAe2ZG/f8uHp0/YKIqydmVIJDg=="
 }

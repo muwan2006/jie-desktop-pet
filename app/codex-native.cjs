@@ -32,8 +32,9 @@ async function begin(manager,t){
  const c=manager.bridge();await c.connect();const original=(await c.request('thread/read',{threadId:t.threadId,includeTurns:false})).thread;if(!original)throw Error('原Codex聊天已不可用，请重新绑定。');const projectId=original.projectId||memberships(manager.h.codexHome)[original.id]||'',directory=await executionDirectory(manager,original,projectId);if(canonical(directory)!==canonical(t.directory))throw Error('原Codex聊天的工作目录已变化，请重新绑定后再下发。');
  if(!manager.isActive(t))return;if(t.cancelRequested){t.result='在投递到原聊天前已取消，未发送。';manager.finish(t,'canceled');return;}
  if(!existingDirectory(original.cwd))throw Error('原Codex聊天的默认目录已失效，请先修复旧目录连接或在Codex中更新工作目录后再发送。消息未投递，也不会附加目录说明。');
+ const input=require('./codex-inputs.cjs').input(t);
  t.nativeQueuedAt=Date.now();t.status='host_wait';t.stage='正在将消息交给原Codex聊天';manager.changed(true);
- try{const r=await c.request('thread/queue/add',{threadId:t.threadId,clientUserMessageId:t.nativeClientId,input:[{type:'text',text:t.request}]});t.nativeQueuedId=r.queuedSubmission?.id||'';t.nativeAccepted=true;manager.changed(true);}catch(e){if(!/超时|断开|关闭/.test(e.message))throw e;t.stage='投递结果待确认，未重复发送';manager.changed(true);return;}
+ try{const r=await c.request('thread/queue/add',{threadId:t.threadId,clientUserMessageId:t.nativeClientId,input});t.nativeQueuedId=r.queuedSubmission?.id||'';t.nativeAccepted=true;manager.changed(true);}catch(e){if(!/超时|断开|关闭/.test(e.message))throw e;t.stage='投递结果待确认，未重复发送';manager.changed(true);return;}
  if(!manager.isActive(t))return;if(t.nativeCancelRequested){try{await stop(manager,t);}catch(e){t.stage=clean(e.message,180);manager.changed();}return;}
  try{if(!manager.h.wakeThread)throw Error('当前版本没有Codex桌面唤醒入口。');await manager.h.wakeThread(t.threadId);t.stage='已进入原Codex聊天队列，等待桌面端处理';}catch(e){t.nativeWakeError=clean(e.message,300);t.stage='消息已在原聊天队列，请打开该Codex聊天继续处理';}
  manager.notice(t,'任务 '+t.id+' 已交给原Codex聊天「'+t.nativeTitle+'」，结果会回到同一段聊天历史，并通知你的QQ。',t.id,'start');manager.changed(true);

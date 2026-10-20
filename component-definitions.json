@@ -128,7 +128,7 @@
       "qq-codex-ui.js"
     ],
     "assets": [],
-    "version": "1.2.0",
+    "version": "1.2.1",
     "entryFiles": [
       "qq-continuity-ui.js",
       "qq-page.css",
