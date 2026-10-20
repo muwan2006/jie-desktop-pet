@@ -13,12 +13,12 @@ try {
  $taskApp=Join-Path $taskBase 'resources\app'
  $taskPackageFile=Join-Path $taskApp 'package.json'
  $taskPackage=Get-Content -LiteralPath $taskPackageFile -Encoding UTF8 -Raw|ConvertFrom-Json
- if($taskPackage.name -ne 'jie-desktop-pet-community' -or $taskPackage.version -notin @('1.0.0','1.0.1','1.0.2','1.0.3','1.0.4','1.0.5','1.1.0','1.1.1','1.1.2','1.1.3','1.2.0','1.2.1')){throw '这里只能更新公开基础版 1.0.0 至 1.2.1，不能更新完整版。'}
+ if($taskPackage.name -ne 'jie-desktop-pet-community' -or $taskPackage.version -notin @('1.0.0','1.0.1','1.0.2','1.0.3','1.0.4','1.0.5','1.1.0','1.1.1','1.1.2','1.1.3','1.2.0','1.2.1','1.2.2')){throw '这里只能更新公开基础版 1.0.0 至 1.2.2，不能更新完整版。'}
  $taskExe=Join-Path $taskBase 'Jie.exe'
  if(-not(Test-Path -LiteralPath $taskExe -PathType Leaf)){throw '没有找到 Jie.exe。'}
  if(Get-CimInstance Win32_Process -Filter "Name='Jie.exe'"|Where-Object {$_.ExecutablePath -and [IO.Path]::GetFullPath($_.ExecutablePath) -eq $taskExe}){throw '基础版仍在运行，请从托盘选择退出桌宠后重试。'}
  $taskManifest=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'repair-manifest.json') -Encoding UTF8 -Raw|ConvertFrom-Json
- if($taskManifest.version -ne '1.2.1'){throw '修复包版本不正确。'}
+ if($taskManifest.version -ne '1.2.2'){throw '修复包版本不正确。'}
  function TaskDigest([string]$File){$taskHasher=[Security.Cryptography.SHA256]::Create();$taskStream=[IO.File]::OpenRead($File);try{return ([BitConverter]::ToString($taskHasher.ComputeHash($taskStream))).Replace('-','').ToLowerInvariant()}finally{$taskStream.Dispose();$taskHasher.Dispose()}}
  function TaskChecked([string]$Base,[string]$Name){
   if(-not $Name -or $Name -match '(^/|\\|:|(^|/)\.\.?(/|$)|[<>"|?*])'){throw '修复包路径不正确。'}
@@ -41,7 +41,7 @@ try {
    if($taskHash -ne $taskFile.Value.sha256 -and $taskHash -notin @($taskFile.Value.previous)){throw ('程序文件有其他修改，未覆盖：'+$taskFile.Name)}
   }
  }
- $taskBackup=Join-Path $taskBase ('community-update-backups\1.2.1-'+[Guid]::NewGuid().ToString())
+ $taskBackup=Join-Path $taskBase ('community-update-backups\1.2.2-'+[Guid]::NewGuid().ToString())
  [IO.Directory]::CreateDirectory($taskBackup)|Out-Null
  $taskDone=New-Object System.Collections.Generic.List[object]
  try{
@@ -69,7 +69,7 @@ try {
   if($taskRollbackErrors.Count){throw ($taskOriginalError+'；部分文件无法恢复，请保留备份：'+$taskBackup)}
   throw ($taskOriginalError+'；已恢复更新前的程序文件。')
  }
- Write-Host '已更新到 1.2.1。请打开原来的 Jie.exe，在功能中心确认已安装数量，再按需勾选安装。'
+ Write-Host '已更新到 1.2.2。请打开原来的 Jie.exe，在功能中心确认已安装数量，再按需勾选安装。'
  Write-Host ('原文件备份：'+$taskBackup)
  exit 0
 }catch{
