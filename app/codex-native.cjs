@@ -30,11 +30,11 @@ async function queueList(c,threadId){let data=[],cursor;for(let i=0;i<8;i++){con
 async function findTurn(c,t){let cursor;for(let i=0;i<6;i++){const page=await c.request('thread/turns/list',{threadId:t.threadId,limit:12,itemsView:'summary',...(cursor?{cursor}:{})});const turn=(page.data||[]).find(row=>row.id===t.turnId&&t.turnId||row.items?.some(item=>item.type==='userMessage'&&(item.clientId===t.nativeClientId||item.id===t.nativeClientId)));if(turn)return turn;cursor=page.nextCursor;if(!cursor)break;}return null;}
 async function begin(manager,t){
  const c=manager.bridge();await c.connect();const original=(await c.request('thread/read',{threadId:t.threadId,includeTurns:false})).thread;if(!original)throw Error('原Codex聊天已不可用，请重新绑定。');const projectId=original.projectId||memberships(manager.h.codexHome)[original.id]||'',directory=await executionDirectory(manager,original,projectId);if(canonical(directory)!==canonical(t.directory))throw Error('原Codex聊天的工作目录已变化，请重新绑定后再下发。');
- if(manager.closed||manager.active!==t)return;if(t.cancelRequested){t.result='在投递到原聊天前已取消，未发送。';manager.finish(t,'canceled');return;}
+ if(!manager.isActive(t))return;if(t.cancelRequested){t.result='在投递到原聊天前已取消，未发送。';manager.finish(t,'canceled');return;}
+ if(!existingDirectory(original.cwd))throw Error('原Codex聊天的默认目录已失效，请先修复旧目录连接或在Codex中更新工作目录后再发送。消息未投递，也不会附加目录说明。');
  t.nativeQueuedAt=Date.now();t.status='host_wait';t.stage='正在将消息交给原Codex聊天';manager.changed(true);
- const input=existingDirectory(original.cwd)?t.request:t.request+'\n\n【已核对的项目目录】这个项目的旧默认目录已经失效，当前项目工作目录是 '+directory+' 。本轮每次执行命令都显式指定这个工作目录，文件操作使用此目录内的绝对路径，不要依赖旧默认目录，不要创建旧目录或复制项目。此说明只确认目录，不增加操作权限。';
- try{const r=await c.request('thread/queue/add',{threadId:t.threadId,clientUserMessageId:t.nativeClientId,input:[{type:'text',text:input}]});t.nativeQueuedId=r.queuedSubmission?.id||'';t.nativeAccepted=true;manager.changed(true);}catch(e){if(!/超时|断开|关闭/.test(e.message))throw e;t.stage='投递结果待确认，未重复发送';manager.changed(true);return;}
- if(manager.closed||manager.active!==t)return;if(t.nativeCancelRequested){try{await stop(manager,t);}catch(e){t.stage=clean(e.message,180);manager.changed();}return;}
+ try{const r=await c.request('thread/queue/add',{threadId:t.threadId,clientUserMessageId:t.nativeClientId,input:[{type:'text',text:t.request}]});t.nativeQueuedId=r.queuedSubmission?.id||'';t.nativeAccepted=true;manager.changed(true);}catch(e){if(!/超时|断开|关闭/.test(e.message))throw e;t.stage='投递结果待确认，未重复发送';manager.changed(true);return;}
+ if(!manager.isActive(t))return;if(t.nativeCancelRequested){try{await stop(manager,t);}catch(e){t.stage=clean(e.message,180);manager.changed();}return;}
  try{if(!manager.h.wakeThread)throw Error('当前版本没有Codex桌面唤醒入口。');await manager.h.wakeThread(t.threadId);t.stage='已进入原Codex聊天队列，等待桌面端处理';}catch(e){t.nativeWakeError=clean(e.message,300);t.stage='消息已在原聊天队列，请打开该Codex聊天继续处理';}
  manager.notice(t,'任务 '+t.id+' 已交给原Codex聊天「'+t.nativeTitle+'」，结果会回到同一段聊天历史，并通知你的QQ。',t.id,'start');manager.changed(true);
 }
@@ -47,13 +47,13 @@ function applyTurn(t,turn){
 }
 async function poll(manager,t){
  if(t.nativePolling||Date.now()<(t.nativeNextPoll||0))return;t.nativePolling=true;t.nativeNextPoll=Date.now()+2500;
- try{const c=manager.bridge();await c.connect();const turn=await findTurn(c,t);if(manager.active!==t)return;
+ try{const c=manager.bridge();await c.connect();const turn=await findTurn(c,t);if(!manager.isActive(t))return;
   if(turn){applyTurn(t,turn);t.updatedAt=Date.now();if(['completed','failed'].includes(turn.status)||turn.status==='interrupted'&&turn.completedAt!=null){
     // A read-only server can report an in-flight foreign turn as interrupted until its terminal timestamp is persisted.
     try{const page=await c.request('thread/items/list',{threadId:t.threadId,turnId:turn.id,sortDirection:'desc',limit:60});applyTurn(t,{...turn,items:(page.data||[]).map(row=>row.item).filter(Boolean).reverse()});}catch{}
     manager.finish(t,turn.status==='completed'?'completed':turn.status==='interrupted'?'canceled':'failed',turn.error?.message||'');return;
    }
-  }else{const rows=await queueList(c,t.threadId),row=rows.find(q=>q.clientUserMessageId===t.nativeClientId);if(row){t.nativeQueuedId=row.id;t.nativeAccepted=true;t.stage='已进入原Codex聊天队列，等待桌面端处理';}else if(!t.nativeAccepted&&Date.now()-t.nativeQueuedAt>60000){manager.finish(t,'failed','未确认原聊天是否收到消息，未自动重复下发。请检查原Codex聊天后再决定是否重试。');return;}else t.stage='等待原Codex聊天更新执行结果';t.status='host_wait';}
+  }else{const rows=await queueList(c,t.threadId),row=rows.find(q=>q.clientUserMessageId===t.nativeClientId);if(row){t.nativeQueuedId=row.id;t.nativeAccepted=true;t.stage=t.nativeWakeError?'消息已在原聊天队列，请打开该Codex聊天继续处理':'已进入原Codex聊天队列，等待桌面端处理';}else if(!t.nativeAccepted&&Date.now()-t.nativeQueuedAt>60000){manager.finish(t,'failed','未确认原聊天是否收到消息，未自动重复下发。请检查原Codex聊天后再决定是否重试。');return;}else t.stage='等待原Codex聊天更新执行结果';t.status='host_wait';}
   manager.changed();
  }catch(e){t.stage='暂时无法查询原Codex聊天，稍后继续确认：'+clean(e.message,150);manager.changed();}finally{delete t.nativePolling;}
 }
