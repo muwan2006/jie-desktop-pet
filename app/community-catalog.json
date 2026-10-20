@@ -1,7 +1,7 @@
 {
   "payload": {
     "schema": 1,
-    "coreVersion": "1.1.0",
+    "coreVersion": "1.1.1",
     "components": [
       {
         "name": "声音与朗读",
@@ -114,18 +114,18 @@
       },
       {
         "name": "QQ聊天",
-        "description": "独立账号接入、群聊私聊、收藏与记忆、群内游戏，以及本人私聊下发Codex项目任务。",
+        "description": "独立账号接入、群聊私聊、收藏与记忆、群内游戏，以及本人QQ接续Codex已有项目聊天。",
         "dependencies": [
           "pet-expressions"
         ],
-        "version": "1.1.0",
+        "version": "1.1.1",
         "id": "qq",
-        "asset": "jie-qq-1.1.0.zip",
-        "bytes": 30759,
-        "sha256": "a76bc860b2ad7da37de93343eb4c0abbc3828a18a3a769d232757440d3380f07",
+        "asset": "jie-qq-1.1.1.zip",
+        "bytes": 32100,
+        "sha256": "fb60d7625b9934c8f119f90dc9d0ffa7c44a1a239d7a7abfd0823e6683ffe268",
         "files": {
-          "community-features/qq.json": "7556c97a8b5b564fb78b2f9b145b29f696e095609efaa0c5772be18ea4354258",
-          "qq-codex-ui.js": "1ba634b58f7dbe626f1a60e2c58084c49bb306d0d51a6fad89ed26ee3ba3c284",
+          "community-features/qq.json": "81e4f7cb758fb1ede3ae6cc7ba99ed0d02d536c50169aebf0586913315bfe8f6",
+          "qq-codex-ui.js": "036da9f79ff4991e794d62ef6f58c670314229cfc864397c01935e7459e198df",
           "qq-continuity-ui.js": "91fbc38c1eaa0dee7b87a8bee4871fb43d804dffeb2c00cadd0a34a16b98d3eb",
           "qq-page.css": "ed102ef202d12cbdd627ab130391b31015d26f83a60b669951a878aa0d187856",
           "qq-page.js": "d71410c179535fcc7a1faf2c4604d7c0f4931a8c3047c714211a9287fff2b7aa",
@@ -2990,5 +2990,5 @@
       }
     ]
   },
-  "signature": "3VPAKkrVo60D/WHwXR3MG0EXy/j+ksaqSI1Jl0dClZe7gCxV77fro86mOazwG7WW/j6SagpDhvVhIMiSpqYzCw=="
+  "signature": "4cysffrrnPrvmyn7mDtgzeuPhl+6eAlv2+6Br9vtOxyDNisqUltJMeukVWED2NtMejNrNs06m93mSVlqEswABg=="
 }
