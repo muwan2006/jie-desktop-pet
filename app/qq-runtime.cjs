@@ -75,6 +75,7 @@ class QQRuntime{
     try{if(m.record){if(!this.h.transcribe)throw Error('QQ语音转写尚未配置。');this.progress('transcribe',m);const recognized=await this.h.transcribe(m.record,controller.signal);if(!current())continue;m.text=String(recognized||'').trim().slice(0,3000);if(!m.text)throw Error('这条语音没有听清，请再说一次或发文字。');const row=c.history.find(h=>h.messageId===m.id);if(row){row.text=m.text;QQMemory.remember(c,row);}}
      if(m.record&&pref.multiTopics&&m.type==='group'){const row=c.history.find(v=>v.messageId===m.id);m.topic=Topics.assign({...c,history:c.history.filter(v=>v!==row)},m);if(row)row.topic=m.topic;}
      if(m.reminder){const item=c.remoteAlerts?.find(v=>v.id===m.reminder);if(!item||item.status!=='pending'||this.now()-item.nextAt>600000)continue;item.status='attempted';this.flushGroupsToDisk();this.emit();this.h.persistNow?.();try{await this.deliver(m,'到时间啦，'+item.text,controller.signal,current);if(current()){item.status='sent';if(item.repeat==='daily'){item.nextAt=Remote.nextDaily(item.time,this.now());item.status='pending';}}}catch(e){item.status='failed';throw e;}continue;}
+     if(await this.handleCodex?.(m,controller.signal,current))continue;
      if(m.jobDeliver){await this.deliverJob(m,c,controller.signal,current);continue;}const localAlert=GroupAlert.local(m);if(localAlert){await this.alertOwner(m,localAlert,current);continue;}
      if(await this.handleContinuity(m,c,pref,controller.signal,current))continue;
      if(OwnerMemory.requested(m,this.settings.owner)){await this.rememberOwner(m,c,controller.signal,current);continue;}
@@ -171,3 +172,5 @@ require('./qq-polish-runtime.cjs').extend(QQRuntime);
 module.exports={QQRuntime};
 
 require('./qq-connection-runtime.cjs').extend(QQRuntime);
+
+require('./qq-codex-runtime.cjs').extend(QQRuntime);

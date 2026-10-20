@@ -114,7 +114,7 @@
   },
   "qq": {
     "name": "QQ聊天",
-    "description": "独立账号接入、群聊和私聊、表情包、会话记忆与群内游戏。QQ桥接另外安装。",
+    "description": "独立账号接入、群聊私聊、收藏与记忆、群内游戏，以及本人私聊下发Codex项目任务。",
     "dependencies": [
       "pet-expressions"
     ],
@@ -124,17 +124,19 @@
       "qq-polish-ui.js",
       "qq-workshop-ui.js",
       "qq-continuity-ui.js",
-      "qq-page.css"
+      "qq-page.css",
+      "qq-codex-ui.js"
     ],
     "assets": [],
-    "version": "1.0.1",
+    "version": "1.1.0",
     "entryFiles": [
       "qq-continuity-ui.js",
       "qq-page.css",
       "qq-page.js",
       "qq-polish-ui.js",
       "qq-ui.js",
-      "qq-workshop-ui.js"
+      "qq-workshop-ui.js",
+      "qq-codex-ui.js"
     ]
   },
   "games": {

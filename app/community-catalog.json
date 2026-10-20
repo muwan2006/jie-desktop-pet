@@ -1,7 +1,7 @@
 {
   "payload": {
     "schema": 1,
-    "coreVersion": "1.0.0",
+    "coreVersion": "1.1.0",
     "components": [
       {
         "name": "声音与朗读",
@@ -114,22 +114,23 @@
       },
       {
         "name": "QQ聊天",
-        "description": "独立账号接入、群聊和私聊、表情包、会话记忆与群内游戏。QQ桥接另外安装。",
+        "description": "独立账号接入、群聊私聊、收藏与记忆、群内游戏，以及本人私聊下发Codex项目任务。",
         "dependencies": [
           "pet-expressions"
         ],
-        "version": "1.0.1",
+        "version": "1.1.0",
         "id": "qq",
-        "asset": "jie-qq-1.0.1.zip",
-        "bytes": 26350,
-        "sha256": "b150d77ee808db4ffae35263d884602f1e76e111b61d16c1b5294b7ec5f6815d",
+        "asset": "jie-qq-1.1.0.zip",
+        "bytes": 30759,
+        "sha256": "a76bc860b2ad7da37de93343eb4c0abbc3828a18a3a769d232757440d3380f07",
         "files": {
-          "community-features/qq.json": "7a098aef8bf4abbc10a307a4df552c2a9b58c3aa7589beaadc136a9fc17e61bb",
+          "community-features/qq.json": "7556c97a8b5b564fb78b2f9b145b29f696e095609efaa0c5772be18ea4354258",
+          "qq-codex-ui.js": "1ba634b58f7dbe626f1a60e2c58084c49bb306d0d51a6fad89ed26ee3ba3c284",
           "qq-continuity-ui.js": "91fbc38c1eaa0dee7b87a8bee4871fb43d804dffeb2c00cadd0a34a16b98d3eb",
           "qq-page.css": "ed102ef202d12cbdd627ab130391b31015d26f83a60b669951a878aa0d187856",
-          "qq-page.js": "e0a9bee79b96ee2ed5fd212c24d28775245a9653b8405017f9ce33a9178fd242",
+          "qq-page.js": "d71410c179535fcc7a1faf2c4604d7c0f4931a8c3047c714211a9287fff2b7aa",
           "qq-polish-ui.js": "dddb920f6d57e35b3986d0b9f04a431299b3c9d66dff2670766f6874d7bc6d50",
-          "qq-ui.js": "846ddb11df980d2ae0a4dcf04d6a12167f9632a2e15d38a6c367f6cb0b8fa8e4",
+          "qq-ui.js": "e1023da7c41ce6179ec99f5eef3e7ec418ee2f0407d15a6f1580fd7a9a470ac3",
           "qq-workshop-ui.js": "c810a6424e890b2e5ad8d3e8e3057268e6ec8893857f8ea2f85fe507a58016f0"
         }
       },
@@ -2989,5 +2990,5 @@
       }
     ]
   },
-  "signature": "jJBM8eRDK9xmII7rUqB3xdo/eapYxjXwSg5zsQwPUIyOcQClJl8La2rSNQplnTj/Z5WpZYajgTQH37DBV63fAw=="
+  "signature": "3VPAKkrVo60D/WHwXR3MG0EXy/j+ksaqSI1Jl0dClZe7gCxV77fro86mOazwG7WW/j6SagpDhvVhIMiSpqYzCw=="
 }

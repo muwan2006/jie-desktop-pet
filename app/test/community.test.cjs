@@ -22,3 +22,18 @@ test('maintenance restores the first file when a later copy fails',{skip:process
 test('failed launcher keeps validated downloads available for resume',{skip:process.platform!=='win32'},async t=>{const f=fixture(t),m=f.make({apply:async()=>{throw Error('startup not ready');}});await assert.rejects(m.install(['feature'],f.files),/startup/);const pending=m.pending();assert.equal(pending.length,1);let attempts=0;const retry=f.make({apply:async()=>{attempts++;}});await retry.resume(pending[0].id);assert.equal(attempts,1);});
 test('resuming a pending job rechecks actual signed file hashes',{skip:process.platform!=='win32'},async t=>{const f=fixture(t),m=f.make({apply:async()=>{throw Error('startup not ready');}});await assert.rejects(m.install(['feature'],f.files));const pending=m.pending()[0],old=JSON.parse(fs.readFileSync(path.join(f.data,'community-jobs',pending.id)));fs.writeFileSync(path.join(old.components[0].stage,'files/library.txt'),'tampered');await assert.rejects(f.make().resume(pending.id),/校验/);assert.equal(fs.existsSync(path.join(f.root,'library.txt')),false);});
 test('installer that exits without a readiness acknowledgment is not treated as ready',async t=>{const f=fixture(t),{EventEmitter}=require('node:events'),{launchMaintenance}=require('../community-launcher.cjs'),job=path.join(f.data,'job.json');fs.writeFileSync(job,JSON.stringify({root:f.root,directory:f.data}));await assert.rejects(launchMaintenance(job,{root:f.root,timeout:200,spawn:()=>{const c=new EventEmitter();setImmediate(()=>c.emit('exit',0));return c;}}),/不会退出/);});
+
+test('QQ project page survives public startup template rendering and is optional',()=>{
+ const root=path.join(__dirname,'..'),defs=JSON.parse(fs.readFileSync(path.join(root,'community-definitions.json'),'utf8')),html=fs.readFileSync(path.join(root,'community-panel.template.html'),'utf8');
+ assert.ok(defs.qq.entryFiles.includes('qq-codex-ui.js'));
+ assert.ok(html.includes('<script src="qq-codex-ui.js"></script>'));
+ assert.ok(html.indexOf('src="qq-page.js"')<html.indexOf('src="qq-codex-ui.js"'));
+ const scripts=installed=>html.replace(/<script src="([^"]+)"><\/script>/g,(tag,file)=>defs.qq.entryFiles.includes(file)&&!installed?'':tag);
+ assert.ok(scripts(true).includes('src="qq-codex-ui.js"'));assert.ok(!scripts(false).includes('src="qq-codex-ui.js"'));
+});
+
+test('an older core rejects a newly signed incompatible component catalog',async t=>{
+ const f=fixture(t),incoming=sign({...f.value.payload,coreVersion:'1.1.0'}),m=f.make({fetch:async()=>new Response(JSON.stringify(incoming))});
+ await assert.rejects(m.refresh(),/先更新基础版/);
+ assert.equal(m.catalog.coreVersion,'1.0.0');assert.equal(fs.existsSync(path.join(f.root,'community-catalog.json')),false);
+});

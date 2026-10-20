@@ -1,5 +1,5 @@
 'use strict';
-function eligible(m){return !!m.text&&!m.proactive&&!m.record&&!m.poke&&!m.upload&&!m.images?.length&&!m.files?.length&&!m.forwards?.length&&!m.videos?.length&&!m.resumed&&!/记住|(?:打开|启动|提醒|便签|待办|专注|记下|后台|任务进度|取消任务|继续任务|暂停任务|撤回|改成|发起投票|发起报名|五子棋|围棋|猜数字|落子|悔棋|认输|结束游戏|报名|投票|查看棋盘|复盘)|^(?:简单|普通|困难|挑战|\d+)[。！!\s]*$/.test(m.text);}
+function eligible(m){return !require('./qq-codex-command.cjs').command(m.text)&&!!m.text&&!m.proactive&&!m.record&&!m.poke&&!m.upload&&!m.images?.length&&!m.files?.length&&!m.forwards?.length&&!m.videos?.length&&!m.resumed&&!/记住|(?:打开|启动|提醒|便签|待办|专注|记下|后台|任务进度|取消任务|继续任务|暂停任务|撤回|改成|发起投票|发起报名|五子棋|围棋|猜数字|落子|悔棋|认输|结束游戏|报名|投票|查看棋盘|复盘)|^(?:简单|普通|困难|挑战|\d+)[。！!\s]*$/.test(m.text);}
 class Burst{
  constructor(deliver,now=()=>Date.now()){this.deliver=deliver;this.now=now;this.items=new Map();}
  key(m){return [m.account,m.self,m.epoch,m.type,m.target,m.sender,m.replyId||'',m.topic||''].join(':');}
