@@ -1,7 +1,7 @@
 {
   "payload": {
     "schema": 1,
-    "coreVersion": "1.2.4",
+    "coreVersion": "1.2.5",
     "components": [
       {
         "name": "声音与朗读",
@@ -450,19 +450,19 @@
         "name": "记录与效率",
         "description": "每日小记、项目、便签提醒、软件通知、角色包、插件和备份搬家。",
         "dependencies": [],
-        "version": "1.0.1",
+        "version": "1.0.2",
         "id": "productivity",
-        "asset": "jie-productivity-1.0.1.zip",
-        "bytes": 17463,
-        "sha256": "2ee158c25d2181e246ad9d4a0f63c582c8d2c6a8e0d381db51a19cd8f33a5bc9",
+        "asset": "jie-productivity-1.0.2.zip",
+        "bytes": 17752,
+        "sha256": "a93b81e4f68480be1edab3e0ed93d1bb55ce3b077360e0ca4bbc41be4019e021",
         "files": {
-          "community-features/productivity.json": "9d254ef1153872dc39def8165449ee27f452a86b9d51a905ddbfc1cef11d5822",
+          "community-features/productivity.json": "0415f8ff5972c38c9e58abab0405e6c32acfcc37fa783be9b20bdf6fba5848f4",
           "diary-ui.css": "aa66ab602120dc7071dd13da040a4d6f42f56eee5083fe4c0c7188c10dd672bc",
           "diary-ui.js": "a01b757c82dbf77c5b3ca2edf319e3310dedd8df059c9f6b5bfeb4a5687d2e16",
           "extensions-ui.css": "6e5a7f1a0664ef2d37d66f453b3cf00088ef7253b4242cf209704b187e590794",
           "extensions-ui.js": "4e1ad26de73c6c7508e236984945e8872f860ef0e49fe91ab5a76931a1668c77",
           "software-ui.css": "ad55ae380420ee7b5e8eecf298f069d044fbfb745d0c3d99eefd6805e2359748",
-          "software-ui.js": "b7521d04a41d43f2ad6d3a68720e4b38a45c40d264e2b65dc11069251908b8a7",
+          "software-ui.js": "592c97fb9845d6b361ae83894a33ba84942b697e740b034007c03a0d687c075c",
           "utility-ui.css": "6af0d68e31776e93b11b89b55252d02233cdddcc1f3c3937b532c8e4eadd39e8",
           "utility-ui.js": "f0f9d73863d2ba13c6c2a0cccf4de481bd66ef804c2ee508461bff8d05984216"
         }
@@ -2990,5 +2990,5 @@
       }
     ]
   },
-  "signature": "EU8h9NnqSgAZOFLFzWxEizPo8RhrSukVkDaFbHV8i1elUuBoL8UMUtWGn+OpgRr1YQR2d2Jlzwp4aVuaWEY2Bg=="
+  "signature": "kabBYlvi9qcesG1h5OabHZxjf6kpG/LzyUMa58HJUTONfN0V53yRYUFx0W+Az4Swp7GNJ2ZYZigUZZmLqm4nCA=="
 }

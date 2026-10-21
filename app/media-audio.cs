@@ -78,5 +78,15 @@ public static class JieMediaAudio {
  [StructLayout(LayoutKind.Sequential)]struct MOUSEINPUT{public int x,y;public uint data,flags,time;public UIntPtr extra;}
  [StructLayout(LayoutKind.Sequential)]struct INPUT{public uint type;public UNION data;}
  [DllImport("user32.dll",SetLastError=true)]static extern uint SendInput(uint count,INPUT[] input,int size);
+ [DllImport("user32.dll")]static extern short GetAsyncKeyState(int key);
+ public static void PlaybackShortcut(string chord){
+  var parts=(chord??"").Split('+');if(parts.Length<1||parts.Length>4)throw new ArgumentException("网易云播放快捷键格式无效。");
+  var keys=new List<ushort>();for(int i=0;i<parts.Length-1;i++){ushort modifier=parts[i]=="Control"?(ushort)0x11:parts[i]=="Alt"?(ushort)0x12:parts[i]=="Shift"?(ushort)0x10:(ushort)0;if(modifier==0||keys.Contains(modifier))throw new ArgumentException("网易云播放快捷键格式无效。");keys.Add(modifier);}
+  var last=parts[parts.Length-1];ushort key=0;int f;if(last.Length==1&&((last[0]>='A'&&last[0]<='Z')||(last[0]>='0'&&last[0]<='9')))key=last[0];else if(last.StartsWith("F")&&int.TryParse(last.Substring(1),out f)&&f>=1&&f<=24)key=(ushort)(0x70+f-1);
+  if(key==0||!keys.Contains(0x11)&&!keys.Contains(0x12)&&!(last.StartsWith("F")&&keys.Count==0))throw new ArgumentException("请填写网易云的全局播放快捷键，例如 Ctrl+Alt+P。");
+  foreach(int held in new[]{0x10,0x11,0x12,0x5B,0x5C,(int)key})if((GetAsyncKeyState(held)&0x8000)!=0)throw new InvalidOperationException("请先松开键盘按键，再重试音乐控制。");
+  keys.Add(key);var input=new List<INPUT>();foreach(var k in keys)input.Add(new INPUT{type=1,data=new UNION{key=new KEYBDINPUT{vk=k}}});for(int i=keys.Count-1;i>=0;i--)input.Add(new INPUT{type=1,data=new UNION{key=new KEYBDINPUT{vk=keys[i],flags=2}}});
+  if(SendInput((uint)input.Count,input.ToArray(),Marshal.SizeOf(typeof(INPUT)))!=(uint)input.Count){var release=new List<INPUT>();for(int i=keys.Count-1;i>=0;i--)release.Add(new INPUT{type=1,data=new UNION{key=new KEYBDINPUT{vk=keys[i],flags=2}}});SendInput((uint)release.Count,release.ToArray(),Marshal.SizeOf(typeof(INPUT)));throw new InvalidOperationException("系统未完成播放快捷键，请检查网易云与桌宠的运行权限是否一致。");}
+ }
  public static void MediaKey(ushort key){var a=new[]{new INPUT{type=1,data=new UNION{key=new KEYBDINPUT{vk=key}}},new INPUT{type=1,data=new UNION{key=new KEYBDINPUT{vk=key,flags=2}}}};if(SendInput(2,a,Marshal.SizeOf(typeof(INPUT)))!=2)throw new InvalidOperationException("系统拒绝媒体按键，请检查播放器与桌宠的运行权限是否一致。");}
 }

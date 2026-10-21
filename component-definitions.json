@@ -484,7 +484,7 @@
       "software-ui.css"
     ],
     "assets": [],
-    "version": "1.0.1",
+    "version": "1.0.2",
     "entryFiles": [
       "diary-ui.css",
       "diary-ui.js",

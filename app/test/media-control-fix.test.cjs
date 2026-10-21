@@ -39,3 +39,11 @@ test('confirmed track changes and actual player volume have distinct truthful fe
  assert.match((await media.execute({action:'volume',value:20})).result,/网易云音乐音量 20%/);
  media.configure({target:'system'});assert.equal(media.settings.target,'system');
 });
+
+test('NetEase fallback uses the configured global shortcut and reports confirmed play/pause without claiming a track change',async()=>{
+ const {shortcut}=require('../media-control.cjs');assert.equal(shortcut('Ctrl＋Alt＋p'),'Control+Alt+P');assert.equal(shortcut('shift+CTRL+P'),'Control+Shift+P');assert.equal(shortcut(''),'');
+ for(const value of ['Space','P','Win+P','Ctrl+Ctrl+P','Ctrl+Alt+P; exit','Control+Alt+F25',null])assert.equal(shortcut(value),null);
+ let args,reply={verified:true,accepted:true,status:'Playing',method:'netease-shortcut'};const c=new MediaControl({run:(_p,a,_o,cb)=>{args=a;cb(null,JSON.stringify(reply));}});c.configure({shortcut:'Ctrl+Shift+P'});
+ assert.equal((await c.execute({action:'play'})).result,'已恢复播放。');assert.equal(args[args.indexOf('-Shortcut')+1],'Control+Shift+P');reply={...reply,status:'Paused'};assert.equal((await c.execute({action:'pause'})).result,'已暂停播放。');reply.already=true;assert.match((await c.execute({action:'pause'})).result,/已暂停，未重复切换/);
+ c.configure({shortcut:''});await c.execute({action:'pause'});assert.equal(args[args.indexOf('-Shortcut')+1],'off');assert.throws(()=>c.configure({shortcut:'Space'}),/全局快捷键/);
+});
