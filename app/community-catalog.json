@@ -1,7 +1,7 @@
 {
   "payload": {
     "schema": 1,
-    "coreVersion": "1.2.3",
+    "coreVersion": "1.2.4",
     "components": [
       {
         "name": "声音与朗读",
@@ -2990,5 +2990,5 @@
       }
     ]
   },
-  "signature": "QUvNzIaLvQHazzBIntp+MzVHujJtMVZBidVvSNEoZdPBM7+HUhw10SGrXUNN4vmfgmh1B7qTMyEwDcV7c4luCQ=="
+  "signature": "EU8h9NnqSgAZOFLFzWxEizPo8RhrSukVkDaFbHV8i1elUuBoL8UMUtWGn+OpgRr1YQR2d2Jlzwp4aVuaWEY2Bg=="
 }

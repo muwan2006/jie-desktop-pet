@@ -7,7 +7,9 @@ function intent(raw){let s=String(raw||'').trim().replace(/[，,。！!？?\s]/g
  const result=v=>target?{...v,target}:v;
  if(/^(?:(?:播放|播|放|换|切|切换|跳)(?:到|成)?)?(?:下一(?:首|曲)|后一(?:首|曲))(?:歌曲|音乐|歌|曲)?$/.test(s))return result({action:'next'});
  if(/^(?:(?:播放|播|放|换|切|切换|跳|回)(?:到|成)?)?(?:上一(?:首|曲)|前一(?:首|曲))(?:歌曲|音乐|歌|曲)?$/.test(s))return result({action:'previous'});
- if(/^(?:暂停|先暂停|停止)(?:这首|当前)?(?:音乐|歌曲|播放|歌)$/.test(s)||/^(?:把)?(?:音乐|歌曲|播放)(?:先)?暂停$/.test(s))return result({action:/停止/.test(s)?'stop':'pause'});
+ if(/^(?:暂停|先暂停)(?:(?:这首|当前)?(?:音乐|歌曲|播放|歌))?$/.test(s)||/^(?:把)?(?:音乐|歌曲|播放|歌)(?:先)?暂停$/.test(s))return result({action:'pause'});
+ if(/^停止(?:这首|当前)?(?:音乐|歌曲|播放|歌)$/.test(s))return result({action:'stop'});
+ if(/^(?:播放|开始播放|继续播放|恢复播放)(?:(?:这首|当前)?(?:音乐|歌曲|歌))?$/.test(s)||/^放(?:这首|当前)?(?:音乐|歌曲|歌)$/.test(s))return result({action:'play'});
  if(/^(?:继续|恢复)(?:这首|当前)?(?:音乐|歌曲|播放|歌)$/.test(s))return result({action:'play'});
  let relative=s.match(/^(?:调|调整)(高|低|大|小)(?:系统)?(?:音量|声音)(?:一点|些|点)?$/);if(relative)return result({action:'adjust',value:/高|大/.test(relative[1])?10:-10});
  if(/^(?:换|切)(?:一?首|歌|首歌|一首歌|首|一曲)$/.test(s)||/^(?:换|切)(?:到)?下一(?:首|曲)$/.test(s))return result({action:'next'});
