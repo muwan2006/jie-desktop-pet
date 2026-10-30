@@ -1,7 +1,7 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path');
 const G=require('../qq-games.cjs'),S=require('../qq-state.cjs'),Coach=require('../qq-coach.cjs'),Character=require('../character.cjs'),GC=require('../qq-group-character.cjs'),{QQRuntime}=require('../qq-runtime.cjs');
-const OWNER='3286799287',A='12345678',B='87654321',BOT='3573186288',GROUP='1021244862',OTHER='1085817912';
+const OWNER='123456789',A='12345678',B='87654321',BOT='234567890',GROUP='345678901',OTHER='456789012';
 const m=(text,sender=A,mention=false)=>({text,sender,mention,type:'group',target:GROUP,name:sender===OWNER?'暮晚':'棋手',at:Date.now()});
 const options={owner:OWNER,random:()=>0};
 test('three chess games coexist with different owners and bare moves target own board',()=>{const c={};G.apply(c,m('五子棋'),options);G.apply(c,m('围棋',B),options);G.apply(c,m('象棋',OWNER),options);assert.equal(G.channels.list(c).length,3);G.apply(c,m('八行八列'),options);G.apply(c,m('五行五列',B),options);assert.equal(c.games.gomoku.board.moves.length,2);assert.equal(c.games.go.board.moves.length,2);assert.equal(c.games.xiangqi.board.moves.length,0);});

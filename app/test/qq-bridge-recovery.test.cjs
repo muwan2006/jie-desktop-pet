@@ -1,6 +1,6 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),{BridgeRecovery,probe,cold}=require('../qq-bridge-recovery.cjs');
-const bot='3573186288',owner='3286799287',binding={pid:111,creation:'2026-10-27T19:22:09Z',expectedQQ:bot};
+const bot='234567890',owner='123456789',binding={pid:111,creation:'2026-10-27T19:22:09Z',expectedQQ:bot};
 function setup(extra={}){const calls={warm:0,probe:0,launch:0,health:0},h={allowed:()=>true,owner:()=>owner,binding:()=>binding,now:()=>1000000,health:async()=>{calls.health++;return {uin:bot,uid:'present',qq_pid:111,uptime_secs:900};},probe:async()=>{calls.probe++;return {ok:true,kind:'ready',account:bot};},warm:async()=>{calls.warm++;},launch:async()=>{calls.launch++;},delay:async()=>{},...extra};return {r:new BridgeRecovery(h),calls,h};}
 test('healthy bridge validates real group API without touching QQ windows',async()=>{const {r,calls}=setup();const out=await r.check('test','ws://127.0.0.1:3002/');assert.equal(out.phase,'ready');assert.equal(calls.probe,1);assert.equal(calls.warm,0);assert.equal(calls.launch,0);});
 test('known cold-start failure initializes once and verifies the API again',async()=>{let attempts=0;const {r,calls}=setup({probe:async()=>++attempts===1?{ok:false,kind:'cold'}:{ok:true}});const out=await r.check('test','ws://127.0.0.1:3002/');assert.equal(out.phase,'ready');assert.equal(calls.warm,1);assert.equal(attempts,2);});
