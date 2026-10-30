@@ -7,7 +7,7 @@ function upgradeDefault(saved){
  const card=saved.chat?.character;
  if(!card){saved.chat={...saved.chat,character:{...DEFAULT_CARD}};return true;}
  if(card.name!=='颉'||card.version!=='1.0'||typeof card.text!=='string')return false;
- if(createHash('sha256').update(card.text.trim()).digest('hex')!==LEGACY_HASH)return false;
+ if(createHash('sha256').update(card.text.trim()).digest('hex')!==LEGACY_HASH&&createHash('sha256').update(card.text.trim()).digest('hex')!=='1a27714dda288306859a3bb90fc9807946b82498656a6699a1af6ece4a53057b')return false;
  saved.chat={...saved.chat,character:{...DEFAULT_CARD}};
  return true;
 }

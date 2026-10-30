@@ -16,8 +16,9 @@ _audio = importlib.util.module_from_spec(_audio_spec)
 _audio_spec.loader.exec_module(_audio)
 choose_device, MusicDucking = _audio.choose_device, _audio.MusicDucking
 
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stdin.reconfigure(encoding='utf-8')
+if __name__=='__main__':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stdin.reconfigure(encoding='utf-8')
 
 def emit(kind, **values):
     print(json.dumps(dict(type=kind, **values), ensure_ascii=False), flush=True)

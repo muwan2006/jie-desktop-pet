@@ -1,7 +1,7 @@
 {
   "payload": {
     "schema": 1,
-    "coreVersion": "1.2.5",
+    "coreVersion": "1.3.0",
     "components": [
       {
         "name": "声音与朗读",
@@ -118,20 +118,26 @@
         "dependencies": [
           "pet-expressions"
         ],
-        "version": "1.2.2",
+        "version": "1.2.3",
         "id": "qq",
-        "asset": "jie-qq-1.2.2.zip",
-        "bytes": 32740,
-        "sha256": "b2f40cf5f7d62cf478c1aeef25d8e8ef927f054dc1f3e1455a0f60a77e8884f5",
+        "asset": "jie-qq-1.2.3.zip",
+        "bytes": 53407,
+        "sha256": "1ea6e0b93d9d0c32f78009f3bbb010491844a3703af86f8f44a516cbc2b07018",
         "files": {
-          "community-features/qq.json": "0b172d4ab75facefb0174cddea203930962d90f0c30151a6e5a9e8fcf432c04e",
+          "qq-bili-ui.js": "ce98878e677a7a18e65e55af498ba1f2f6f0e82096b4dd4db0efc4088f1792bb",
           "qq-codex-ui.js": "165e44aad3d8a059dd93aa7599581cc43d93f76801256c88b1df61cbc9ff9379",
           "qq-continuity-ui.js": "91fbc38c1eaa0dee7b87a8bee4871fb43d804dffeb2c00cadd0a34a16b98d3eb",
+          "qq-daily-review-ui.js": "0ddf147e1b3d4ade8b5e9ea1e25f812818d7af865ee1fb5b7108a99209984033",
+          "qq-event-memory-ui.js": "4d9b94cad9c988d6e9fbe234e1660299f9cdb8819509a97512dfa1b31b8e66f3",
+          "qq-gallery-ui.js": "036872cad0cb414cee22da42e064a90cee4de9c2b0c54ad174b4dbc56c3044e4",
           "qq-page.css": "ed102ef202d12cbdd627ab130391b31015d26f83a60b669951a878aa0d187856",
           "qq-page.js": "d71410c179535fcc7a1faf2c4604d7c0f4931a8c3047c714211a9287fff2b7aa",
           "qq-polish-ui.js": "dddb920f6d57e35b3986d0b9f04a431299b3c9d66dff2670766f6874d7bc6d50",
-          "qq-ui.js": "e1023da7c41ce6179ec99f5eef3e7ec418ee2f0407d15a6f1580fd7a9a470ac3",
-          "qq-workshop-ui.js": "c810a6424e890b2e5ad8d3e8e3057268e6ec8893857f8ea2f85fe507a58016f0"
+          "qq-recovery-ui.js": "851b8f906eb9e0a05cbbc488e0a4c1c80d26e7bc24bc2d8772c32aa8c7cf5b43",
+          "qq-self-memory-ui.js": "9ccd475b5a2ea3d026d87432fd803eada82aabdf9f7f3e8a78dcaba1a871d066",
+          "qq-ui.js": "a8167b4907fcb314e0d4be6dcddb8ded2e74f9b6c1ff88635a1d6209c05477ea",
+          "qq-workshop-ui.js": "c810a6424e890b2e5ad8d3e8e3057268e6ec8893857f8ea2f85fe507a58016f0",
+          "community-features/qq.json": "504387ae1a2b6491865655312e501aefa9a6c42d5fe3156344a6685d426f5de6"
         }
       },
       {
@@ -2987,8 +2993,27 @@
           "asr-runtime/winsound.pyd": "100e8d676777603c7258daf9b2f23ef001f09f1596d8708de359326fff72bddd",
           "community-features/local-runtime.json": "69de8cf53a42f904ffe243fa86f5776a1496bfe04b2879bbfd72b6a3f89eb40f"
         }
+      },
+      {
+        "name": "唱歌与翻唱",
+        "description": "在线点歌、本机歌声转换与QQ语音回传；需另备SoulX歌声引擎和参考音频。",
+        "dependencies": [
+          "voice",
+          "productivity"
+        ],
+        "version": "1.0.0",
+        "id": "singing",
+        "asset": "jie-singing-1.0.0.zip",
+        "bytes": 3181,
+        "sha256": "5221b7de21942f32059b1f9657847dee103c4ac5ea16088a34f90273c2f4f710",
+        "files": {
+          "singing-player.js": "e143bf0b06239dd65f2190f16ec2ae2401ea5809472d3795bf49cb783240c21a",
+          "singing-ui.js": "5fa1f5aed4f4bc02439d64b54878f78279d73d3327b155c753ae70b606ccfd2e",
+          "singing.html": "1ffde32f4976a5e907a24c4186d4ecd65a8612d615d8b7916e86992a505c1592",
+          "community-features/singing.json": "6299792f53fb969b0140b843cd6dd8282048428bc7896fba22d22e354bd4e669"
+        }
       }
     ]
   },
-  "signature": "kabBYlvi9qcesG1h5OabHZxjf6kpG/LzyUMa58HJUTONfN0V53yRYUFx0W+Az4Swp7GNJ2ZYZigUZZmLqm4nCA=="
+  "signature": "7UfRS8/KIuY8bwPflThaB4kQWBSKCl/PoLxNG9JSavpVShmR+XrPwkPNkjZD53a4vkI0vZF2JTTH9T/SRu4lBA=="
 }

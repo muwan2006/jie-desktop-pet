@@ -22,3 +22,7 @@ QQ桥接软件、云模型服务和GPT-SoVITS独立引擎由用户另行取得�
 ## 名字唤醒模型
 
 语音输入包使用 pkufool / k2-fsa 的 sherpa-onnx-kws-zipformer-zh-en-3M-2025-12-20。模型作者在 [上游说明](https://github.com/k2-fsa/sherpa-onnx/issues/3802) 中于 2026-10-08 确认更新了 [ModelScope 模型](https://modelscope.cn/models/pkufool/icefall-kws-zipformer-zh-en-3M-2025-12-20) 的 Apache 2.0 许可。包内保留 LICENSE 与 NOTICE；基础程序 wake-model/SOURCE.json 保留来源及哈希。权重未修改，仅统一了文件名。
+
+## 新增媒体与歌声适配
+
+媒体获取所用yt-dlp wheel保留其上游许可证与声明，来源和版本见 [媒体组件声明](app/MEDIA-THIRD-PARTY.md)。SoulX-Singer-SVC、Demucs与RMVPE仅提供接入代码和来源链接，不分发作者的私人引擎环境、训练权重或参考录音。相关项目和模型遵循各自许可证。表达学习设计调研参考 [dsh-beme](https://github.com/shua-781/dsh-beme)；未将整个插件作为依赖打包。

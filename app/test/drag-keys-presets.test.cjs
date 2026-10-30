@@ -28,7 +28,7 @@ test('custom keys persist, duplicate or occupied registrations roll back all cha
  assert.ok(s.configure({...saved.keys,chat:saved.keys.reveal}).error);s.stop();assert.equal(reg.registered.size,0);const restored=new Shortcuts(saved,reg.api,id=>calls.push(id));restored.start();assert.ok(reg.registered.has('Control+Alt+K'));restored.stop();
 });
 test('all non-chat fixed responses and reminders have intact recordings, first head touch is only light-touch words',()=>{
- const texts=new Set(),collect=e=>{const say=e.say.bind(e);e.say=(text,...args)=>{texts.add(text);return say(text,...args);};return e;};const v=new Voice({presetGreetings:false,autoInteraction:true},{presetDirectory:()=>require('node:path').join(__dirname,'../../components/voice/files/assets/voice/presets'),request(){throw Error('Synthesis forbidden');}});
+ const texts=new Set(),collect=e=>{const say=e.say.bind(e);e.say=(text,...args)=>{texts.add(text);return say(text,...args);};return e;};const v=new Voice({presetGreetings:false,autoInteraction:true},{request(){throw Error('Synthesis forbidden');}});
  for(const command of ['touch','tea','talk','jump','wave','read','rest','companion','focus','stop-focus'])for(const random of [0,.3,.6,.9]){const e=collect(new Engine({},0,()=>random));e.command(command,1000);if(command==='tea')e.command(command,2000);}
  for(const part of ['head','face','tail','body']){const e=collect(new Engine({},0));for(const now of [1000,7500,14000])e.touch(part,now);}
  for(const random of [0,.21,.41,.61,.81]){const e=collect(new Engine({},0,()=>random));e.nextSpeech=0;e.tick(1000,{x:0,y:0},{x:0,y:0,width:1920,height:1080},{width:300,height:400});}
@@ -39,5 +39,5 @@ test('all non-chat fixed responses and reminders have intact recordings, first h
  for(const id of ['custom-reminder','action-note','action-todo','action-reminder','action-link','action-done'])assert.ok(v.preset(id));v.stop();assert.ok(texts.size>=30);
 });
 test('daily recordings obey daily opt-out separately from greeting opt-out, never start service',()=>{
- const v=new Voice({presetGreetings:false,autoInteraction:true},{presetDirectory:()=>require('node:path').join(__dirname,'../../components/voice/files/assets/voice/presets'),request(){throw Error('No synthesis');}});assert.equal(v.playPreset('touch',{daily:true}).preset,true);v.stop();assert.equal(v.playPreset('morning').skipped,true);v.configure({autoInteraction:false,presetGreetings:true});assert.equal(v.playPreset('touch',{daily:true}).skipped,true);assert.equal(v.playPreset('morning').preset,true);v.stop();
+ const v=new Voice({presetGreetings:false,autoInteraction:true},{request(){throw Error('No synthesis');}});assert.equal(v.playPreset('touch',{daily:true}).preset,true);v.stop();assert.equal(v.playPreset('morning').skipped,true);v.configure({autoInteraction:false,presetGreetings:true});assert.equal(v.playPreset('touch',{daily:true}).skipped,true);assert.equal(v.playPreset('morning').preset,true);v.stop();
 });

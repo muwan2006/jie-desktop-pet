@@ -2,8 +2,9 @@
 const {contextBridge,ipcRenderer,webUtils}=require('electron');
 const subscribe=(channel,callback)=>{const handler=(_event,value)=>callback(value);ipcRenderer.on(channel,handler);return()=>ipcRenderer.removeListener(channel,handler);};
 contextBridge.exposeInMainWorld('jie',{
- atelier:(op,v)=>ipcRenderer.invoke('atelier',op,v),onAtelier:cb=>subscribe('atelier-state',cb),
  community:(op,v)=>ipcRenderer.invoke('community-components',op,v),onCommunity:cb=>subscribe('community-state',cb),
+ singing:(op,v)=>ipcRenderer.invoke('singing',op,v),onSinging:cb=>subscribe('singing-state',cb),onSingingAudio:cb=>subscribe('singing-audio',cb),singingPlayback:(id,type)=>ipcRenderer.send('singing-playback',id,type),
+ atelier:(op,v)=>ipcRenderer.invoke('atelier',op,v),onAtelier:cb=>subscribe('atelier-state',cb),
  musicTrack:(op,v)=>ipcRenderer.invoke('music-track',op,v),onMusicTrack:cb=>subscribe('music-track-state',cb),
  qq:(op,v)=>ipcRenderer.invoke('qq',op,v),onQQ:cb=>subscribe('qq-state',cb),
  weather:(op,v)=>ipcRenderer.invoke('weather',op,v),onWeather:cb=>subscribe('weather-state',cb),

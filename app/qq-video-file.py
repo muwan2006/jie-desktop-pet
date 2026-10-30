@@ -2,7 +2,8 @@
 import sys,json,base64,io,importlib.util,contextlib
 from pathlib import Path
 from fractions import Fraction
-sys.stdout.reconfigure(encoding='utf-8');sys.stdin.reconfigure(encoding='utf-8')
+if __name__=='__main__':
+ sys.stdout.reconfigure(encoding='utf-8');sys.stdin.reconfigure(encoding='utf-8')
 def extract(file,config):
  import av,numpy as np
  file=Path(file)
@@ -13,7 +14,7 @@ def extract(file,config):
   stream=source.streams.video[0]
   duration=float(source.duration or 0)/av.time_base or float(stream.duration or 0)*float(stream.time_base)
   if duration<=0 or start>=duration:raise ValueError('视频时长无法取得，或起始位置超过视频长度。')
-  end=min(duration,start+60);times=[start+(end-start)*fraction for fraction in ((.45,) if config.get('frameCount')==1 else (0,.32,.65,.94))]
+  end=min(duration,start+60);count=max(1,min(4,int(config.get('frameCount') or 4)));fractions={1:(.45,),2:(.2,.8),3:(0,.45,.94),4:(0,.32,.65,.94)}[count];times=[start+(end-start)*fraction for fraction in fractions]
   for at in times:
    source.seek(int(at*av.time_base),backward=True)
    count=0
@@ -32,7 +33,7 @@ def extract(file,config):
   if not frames:raise ValueError('没有取得有效视频帧。')
  subtitles=[];transcript='';audio_status='没有音轨'
  with av.open(str(file)) as source:
-  if source.streams.audio:
+  if source.streams.audio and not config.get('skipSpeech'):
    source.seek(int(start*av.time_base),backward=True);track=source.streams.audio[0];resampler=av.AudioResampler(format='flt',layout='mono',rate=16000);audio=[];samples=0
    for frame in source.decode(track):
     at=float(frame.pts or 0)*float(track.time_base)
