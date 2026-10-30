@@ -1,11 +1,41 @@
 'use strict';
-(()=>{if(!document.getElementById('page-qq'))return;const el=(t,text)=>{const e=document.createElement(t);if(text)e.textContent=text;return e;},section=el('section'),status=el('p'),skills=el('div'),results=el('div'),controls={},form=el('div');section.id='qq-self-memory';section.append(el('h2','同一个颉：整体经验与群聊回忆'),el('p','各群仍保留独立的角色卡与记忆来源。经审核、匿名提炼的交流方法可用于整体；本机及与你的私聊可以检索各群经历，群内不会自动拿到其他群或私聊的记录。只有有依据的互动才能作为她的经历，不把群友的经历当作自己的。'),form,status,skills);window.JieQQPage.mount(section,'memory',5);let loading=false,dirty=false,renderedSignature='';
- for(const [key,label,type]of [['globalLearning','整体使用可迁移的表达经验','checkbox'],['ownerRecall','允许本机及主人私聊回顾各群记忆','checkbox'],['shareExperiences','允许偶尔私聊分享群内趣事或感受','checkbox'],['storyGap','群内经历分享至少间隔（分钟，每天最多2次）','number']]){const input=el('input'),l=el('label',label);input.type=type;input.id='qq-self-'+key;if(type==='number'){input.min=30;input.max=1440;}input.oninput=()=>dirty=true;l.append(input);form.append(l);controls[key]=input;}
- function button(label,fn,id){const b=el('button',label);b.type='button';if(id)b.id=id;b.onclick=async()=>{b.disabled=true;try{await fn();}catch(e){status.textContent=e.message;}finally{b.disabled=false;}};return b;}
- async function call(op,v){const r=await window.jie.qq(op,v||{});if(r.error)throw Error(r.error);return r;}
- function paint(r){if(!dirty)for(const [k,e]of Object.entries(controls)){if(e.type==='checkbox')e.checked=r.settings[k];else e.value=r.settings[k];}status.textContent=(r.busy?'正在提炼整体经验':'当前空闲')+' · 可回顾 '+r.groups.length+' 个群；已提炼 '+r.skills.filter(h=>h.active).length+' 条可用表达经验'+(r.error?' · '+r.error:'');const signature=JSON.stringify(r.skills);if(signature===renderedSignature)return;renderedSignature=signature;const open=new Set(Array.from(skills.querySelectorAll('details[open]')).map(e=>e.dataset.skill));skills.replaceChildren();for(const h of r.skills.slice().reverse()){const d=el('details');d.dataset.skill=h.id;d.open=open.has(h.id);d.append(el('summary',(h.active?'可用：':'到期或来源已失效：')+h.title),el('p','适用：'+h.situation+'\n尝试：'+h.approach+'\n避免：'+h.avoid),el('p','来源群：'+[...new Set(h.sources.map(s=>s.group))].join('、')+'。仅本机管理界面显示来源，群内提示不包含来源。'),button('撤销这条整体经验',async()=>paint(await call('self-memory-forget',{id:h.id}))));skills.append(d);}if(!r.skills.length)skills.append(el('p','尚无整体经验。有本群学习成果后，会在空闲时提炼；不能可靠迁移的内容会留在原会话。'));}
- form.append(button('保存整体记忆设置',async()=>{const v={};for(const [k,e]of Object.entries(controls))v[k]=e.type==='checkbox'?e.checked:Number(e.value);const r=await call('self-memory-settings',v);dirty=false;paint(r);},'qq-self-save'),button('现在提炼已有经验',async()=>paint(await call('self-memory-run')),'qq-self-run'),button('刷新整体经验',refresh));
- const query=el('input');query.type='text';query.maxLength=500;query.id='qq-self-query';query.placeholder='例如：今天群里有什么好玩的／之前聊过的古桥';section.append(query,button('检索群聊记忆',async()=>{const r=await call('self-memory-search',{query:query.value});results.replaceChildren();for(const x of r.records||[])results.append(el('p',x.groupName+' · '+x.rolePlayed+' · '+new Date(x.at).toLocaleString()+'\n'+x.speaker+'：'+x.text+'\n来源消息：'+x.sourceId));if(!r.records?.length)results.append(el('p','没有检索到可用原文；可能没有匹配、来源已撤回或回顾开关已关闭。'));},'qq-self-search'),results);
- async function refresh(){if(loading)return;loading=true;try{paint(await call('self-memory'));}catch(e){status.textContent=e.message;}finally{loading=false;}}
+(()=>{
+ if(!document.getElementById('page-qq'))return;
+ const el=(t,text)=>{const e=document.createElement(t);if(text)e.textContent=text;return e;};
+ const section=el('section'),status=el('p'),notice=el('p'),report=el('p'),skills=el('div'),results=el('div'),controls={},form=el('div'),actions=el('div');
+ section.id='qq-self-memory';form.className='qq-self-settings';actions.className='qq-self-actions';
+ status.id='qq-self-status';notice.id='qq-self-notice';report.id='qq-self-result';
+ for(const node of [status,notice,report])node.setAttribute('aria-live','polite');
+ section.append(el('h2','同一个颉：整体经验与群聊回忆'),el('p','各群仍保留独立的角色卡与记忆来源。经审核、匿名提炼的交流方法可用于整体；本机及与你的私聊可以检索各群经历，群内不会自动拿到其他群或私聊的记录。只有有依据的互动才能作为她的经历，不把群友的经历当作自己的。'),form,actions,status,notice,report,skills);
+ window.JieQQPage.mount(section,'memory',5);
+ let loading=false,dirty=false,renderedSignature='',running=false,lastView;
+ for(const [key,label,type]of [['globalLearning','整体使用可迁移的表达经验','checkbox'],['ownerRecall','允许本机及主人私聊回顾各群记忆','checkbox'],['shareExperiences','允许偶尔私聊分享群内趣事或感受','checkbox'],['storyGap','群内经历分享至少间隔（分钟，每天最多2次）','number']]){
+  const input=el('input'),l=el('label',label);input.type=type;input.id='qq-self-'+key;
+  if(type==='number'){input.min=30;input.max=1440;}input.oninput=()=>dirty=true;l.append(input);form.append(l);controls[key]=input;
+ }
+ function button(label,fn,id){const b=el('button',label);b.type='button';if(id)b.id=id;b.onclick=async()=>{b.disabled=true;try{await fn();}catch(e){notice.textContent=e.message;}finally{b.disabled=b===runButton&&(running||lastView?.busy);}};return b;}
+ async function call(op,v){const r=await window.jie.qq(op,v||{});if(r?.error&&!r.settings)throw Error(r.error);if(!r)throw Error('未收到处理结果，请刷新后重试');return r;}
+ function paint(r){
+  lastView=r;
+  if(!dirty)for(const [k,e]of Object.entries(controls)){if(e.type==='checkbox')e.checked=r.settings[k];else e.value=r.settings[k];}
+  status.textContent=(r.busy?(r.progress||'正在提炼整体经验'):'当前空闲')+' · 可回顾 '+r.groups.length+' 个群；有效学习来源 '+(r.sources?.eligible||0)+' 项，待处理 '+(r.sources?.pending||0)+' 项；可用整体经验 '+r.skills.filter(h=>h.active).length+' 条';
+  runButton.textContent=r.busy?(r.progress||'提炼中')+'…':'现在提炼已有经验';runButton.disabled=running||r.busy;
+  report.textContent=r.lastRun?'上次结果（'+new Date(r.lastRun.at).toLocaleString()+'）：'+r.lastRun.message+(r.lastRun.remaining?' 还有 '+r.lastRun.remaining+' 项待处理，再点一次继续。':''):r.error||'尚未进行整体提炼。手动点击会重试尚未成功提炼的已有成果；没有新增时也会显示原因。';
+  const signature=JSON.stringify(r.skills);if(signature===renderedSignature)return;renderedSignature=signature;
+  const open=new Set(Array.from(skills.querySelectorAll('details[open]')).map(e=>e.dataset.skill));skills.replaceChildren();
+  for(const h of r.skills.slice().reverse()){
+   const d=el('details');d.dataset.skill=h.id;d.open=open.has(h.id);
+   d.append(el('summary',(h.active?'可用：':'到期或来源已失效：')+h.title),el('p','适用：'+h.situation+'\n尝试：'+h.approach+'\n避免：'+h.avoid),el('p','来源群：'+[...new Set(h.sources.map(s=>s.group))].join('、')+'。仅本机管理界面显示来源，群内提示不包含来源。'),button('撤销这条整体经验',async()=>paint(await call('self-memory-forget',{id:h.id}))));skills.append(d);
+  }
+  if(!r.skills.length)skills.append(el('p','尚无整体经验。群聊复盘中的有效成果才是提炼来源；有群聊记录不代表一定已经形成可迁移经验。'));
+ }
+ const runButton=button('现在提炼已有经验',async()=>{
+  running=true;notice.textContent='正在提交提炼请求，通常需要两次模型处理；最多等待150秒。';runButton.textContent='正在提炼…';
+  try{const r=await call('self-memory-run');notice.textContent='';paint(r);}finally{running=false;if(lastView)paint(lastView);}
+ },'qq-self-run');
+ actions.append(button('保存整体记忆设置',async()=>{const v={};for(const [k,e]of Object.entries(controls))v[k]=e.type==='checkbox'?e.checked:Number(e.value);const r=await call('self-memory-settings',v);dirty=false;paint(r);notice.textContent='整体记忆设置已保存。';},'qq-self-save'),runButton,button('刷新整体经验',refresh));
+ const query=el('input');query.type='text';query.maxLength=500;query.id='qq-self-query';query.placeholder='例如：今天群里有什么好玩的／之前聊过的古桥';
+ section.append(query,button('检索群聊记忆',async()=>{const r=await call('self-memory-search',{query:query.value});results.replaceChildren();for(const x of r.records||[])results.append(el('p',x.groupName+' · '+x.rolePlayed+' · '+new Date(x.at).toLocaleString()+'\n'+x.speaker+'：'+x.text+'\n来源消息：'+x.sourceId));if(!r.records?.length)results.append(el('p','没有检索到可用原文；可能没有匹配、来源已撤回或回顾开关已关闭。'));},'qq-self-search'),results);
+ async function refresh(){if(loading)return;loading=true;try{paint(await call('self-memory'));}catch(e){notice.textContent=e.message;}finally{loading=false;}}
  window.jie.onQQ(()=>{if(window.JieQQPage.active()==='memory')void refresh();});void refresh();
 })();

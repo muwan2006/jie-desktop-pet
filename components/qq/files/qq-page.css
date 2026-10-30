@@ -24,3 +24,6 @@
 #qq-pane-overview button{margin:4px 4px 4px 0;padding:9px 12px}
 @media(max-width:1200px){#qq-pane-overview{display:block}}
 @media(max-width:1100px){#qq-page-nav button{padding:9px 11px}#qq-logs{max-height:240px}}
+
+/* Unified experience settings and action feedback. */
+#qq-self-memory .qq-self-settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 20px;margin:18px 0}#qq-self-memory .qq-self-settings label{display:flex;align-items:center;justify-content:space-between;gap:12px}#qq-self-memory .qq-self-settings input[type=number]{width:110px}#qq-self-memory .qq-self-actions{display:flex;flex-wrap:wrap;gap:10px}#qq-self-result,#qq-self-notice{white-space:pre-wrap;overflow-wrap:anywhere}#qq-self-notice:empty{display:none}

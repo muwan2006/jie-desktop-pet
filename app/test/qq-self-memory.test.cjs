@@ -26,3 +26,50 @@ test('daily schedule honors the configured minute in Shanghai time',t=>{const f=
 test('verified generic static review adjustments are eligible for overall de-identified transfer',t=>{const f=fixture(t);f.g.habits=[];f.g.rules=[{code:'avoid_repeat',at:f.q.now(),runId:'run'}];f.g.runs=[{id:'run',issues:[{code:'avoid_repeat',botId:'102',userId:'103'}]}];assert.equal(f.self.sources().length,1);f.g.disabled.push('avoid_repeat');assert.equal(f.self.sources().length,0);});
 
 test('bridge heartbeats do not cancel learning but direct owner speech does',async t=>{const f=fixture(t),ctl=new AbortController();f.self.controller=ctl;f.q.receive({post_type:'meta_event',meta_event_type:'heartbeat',self_id:BOT});assert.equal(ctl.signal.aborted,false);f.q.receive({post_type:'message',message_type:'private',self_id:BOT,user_id:OWNER,message_id:890,time:f.q.now()/1000,message:[{type:'text',data:{text:'我来找你聊聊'}}]});for(let i=0;i<200&&(f.q.busy||f.q.queue.length);i++)await new Promise(r=>setTimeout(r,5));assert.equal(ctl.signal.aborted,true);});
+
+test('manual extraction retries previously processed zero-output sources and persists its result',async t=>{
+ const f=fixture(t),source=f.self.sources()[0];let n=0;f.q.h.media.ask=async()=>{n++;return {skills:[]};};
+ await f.self.transfer();assert.equal(n,1);assert.equal(f.self.view().lastRun.approved,0);assert.match(f.self.view().lastRun.message,/未提出/);
+ await f.self.transfer();assert.equal(n,1);assert.equal(f.self.view().lastRun.status,'skipped');
+ f.q.h.media.ask=async()=>++n===2?{skills:[{...body,sourceIds:[source.id]}]}:{decisions:[{index:0,approved:true,transferable:true,deidentified:true}]};
+ const result=await f.q.operation('self-memory-run');assert.equal(result.skills.filter(h=>h.active).length,1);assert.equal(result.lastRun.retried,true);assert.equal(result.lastRun.approved,1);assert.equal(new Self.SelfMemory(f.q).view().lastRun.approved,1);
+ await f.q.operation('self-memory-run');assert.equal(n,3);assert.match(f.self.view().lastRun.message,/已同步/);
+});
+
+test('empty sources, invalid model output and audit rejection have distinct observable outcomes',async t=>{
+ const f=fixture(t);f.g.habits=[];const empty=await f.q.operation('self-memory-run');assert.equal(empty.sources.eligible,0);assert.match(empty.lastRun.message,/没有可提炼/);
+ f.g.habits=[{...body,id:'new',signature:L.signature(body),revision:1,status:'trial',expires:f.q.now()+86400000,evidence:[{botId:'102',userId:'103'}]}];
+ f.q.h.media.ask=async()=>({reply:'错误格式'});await f.self.transfer();assert.equal(f.self.view().lastRun.status,'failed');assert.match(f.self.view().error,/未返回有效/);assert.equal(Object.keys(f.self.data().processed).length,0);
+ const source=f.self.sources()[0];let n=0;f.q.h.media.ask=async()=>++n===1?{skills:[{...body,sourceIds:[source.id]}]}:{decisions:[{index:0,approved:false}]};await f.self.transfer();assert.equal(f.self.view().lastRun.status,'completed');assert.match(f.self.view().lastRun.message,/未通过.*审核/);assert.equal(f.self.liveSkills().length,0);
+});
+
+test('model timeout and cancellation are reported without swallowing them as empty success',async t=>{
+ const f=fixture(t);f.q.h.media.ask=async()=>{f.self.controller.abort(new DOMException('time limit','TimeoutError'));throw new DOMException('time limit','TimeoutError');};
+ await f.self.transfer();assert.equal(f.self.view().lastRun.status,'canceled');assert.match(f.self.view().error,/150秒/);assert.equal(f.self.busy,false);assert.equal(Object.keys(f.self.data().processed).length,0);
+ f.q.h.media.ask=async()=>{f.self.controller.abort();throw new DOMException('stop','AbortError');};await f.self.transfer();assert.match(f.self.view().lastRun.message,/中断/);assert.equal(f.self.view().busy,false);
+});
+
+test('transfer exposes extraction and audit progress and manual retries retain source protections',async t=>{
+ const f=fixture(t),source=f.self.sources()[0],phases=[];let n=0;
+ f.q.h.media.ask=async()=>{phases.push(f.self.view().progress);return ++n===1?{skills:[{...body,sourceIds:[source.id]}]}:{decisions:[{index:0,approved:true,transferable:true,deidentified:true}]};};
+ await f.self.transfer();assert.deepEqual(phases,['提炼中','审核中']);assert.equal(f.self.view().busy,false);assert.equal(f.self.view().progress,'');
+ const skill=f.self.liveSkills()[0];await f.q.operation('self-memory-forget',{id:skill.id});await f.q.operation('self-memory-run');assert.equal(f.self.liveSkills().length,0);assert.equal(f.self.data().withdrawn.length,1);
+});
+
+test('invalid rewritten sources fall back to verified origins only after an independent positive audit',async t=>{
+ const f=fixture(t);let n=0;const prompts=[];f.q.h.media.ask=async o=>{prompts.push(o);return ++n===1?{skills:[{...body,sourceIds:['fabricated']},{...body,sourceIds:'not-an-array'},{title:'invalid'}]}:{decisions:[{index:0,approved:true,transferable:true,deidentified:true}]};};
+ await f.self.transfer();const v=f.self.view();assert.equal(n,2);assert.equal(v.lastRun.filtered,3);assert.equal(v.lastRun.rejected.source,2);assert.equal(v.lastRun.rejected.content,1);assert.equal(v.lastRun.fallback,1);assert.equal(v.lastRun.approved,1);assert.match(v.lastRun.message,/已核对.*独立审核/);assert.equal(f.self.liveSkills().length,1);assert.ok(!JSON.stringify(prompts[1]).includes('fabricated'));
+});
+
+test('origin fallback still obeys rejected audit, revoked experience and privacy checks',async t=>{
+ const f=fixture(t);let n=0;f.q.h.media.ask=async()=>++n===1?{skills:[{...body,sourceIds:['fabricated']}]}:{decisions:[{index:0,approved:true,transferable:false,deidentified:true}]};await f.self.transfer();assert.equal(f.self.liveSkills().length,0);assert.equal(f.self.view().lastRun.fallback,1);
+ f.self.data().withdrawn=[body];n=0;await f.self.transfer({manual:true});assert.equal(f.self.liveSkills().length,0);assert.equal(f.self.view().lastRun.fallback,0);assert.equal(n,1);
+});
+
+test('an explicit empty proposal remains empty and cannot trigger automatic origin promotion',async t=>{
+ const f=fixture(t);let n=0;f.q.h.media.ask=async()=>{n++;return {skills:[]};};await f.self.transfer();assert.equal(n,1);assert.equal(f.self.liveSkills().length,0);assert.equal(f.self.view().lastRun.fallback,0);
+});
+
+test('unrecognized proposal ID cannot modify another skill but does not discard valid source evidence',async t=>{
+ const f=fixture(t),source=f.self.sources()[0];let n=0;f.q.h.media.ask=async()=>++n===1?{skills:[{...body,id:'model-invented-new-id',sourceIds:[source.id]}]}:{decisions:[{index:0,approved:true,transferable:true,deidentified:true}]};await f.self.transfer();assert.equal(f.self.liveSkills().length,1);assert.notEqual(f.self.liveSkills()[0].id,'model-invented-new-id');assert.equal(f.self.view().lastRun.fallback,0);
+});
